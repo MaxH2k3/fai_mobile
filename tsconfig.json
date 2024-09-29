@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "jsx": "react", // hoặc "react-jsx" cho React 17+
+    // Các tùy chọn khác...
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "extends": "@tsconfig/react-native/tsconfig.json"
+}

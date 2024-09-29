@@ -1,0 +1,25 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "workbench.colorTheme": "Material Theme High Contrast",
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.inlineSuggest.enabled": true,
+  "editor.formatOnSave": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[tsx]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.fontSize": 12.4,
+  "files.autoSave": "onFocusChange",
+  "editor.tabSize": 2
+}
