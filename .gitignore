@@ -128,3 +128,19 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.expo/*
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+android/
+*.orig.*
+web-build/
+android/
+ios/
+web-report/
+# macOS
+.DS_Store
