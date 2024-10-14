@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import ParsedText from 'react-native-parsed-text';
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import {text} from '../../text';
-import {hooks} from '../../hooks';
-import {custom} from '../../custom';
-import {svg} from '../../assets/svg';
-import {theme} from '../../constants';
-import {components} from '../../components';
+import { text } from '../../text';
+import { hooks } from '../../hooks';
+import { custom } from '../../custom';
+import { svg } from '../../assets/svg';
+import { theme } from '../../constants';
+import { components } from '../../components';
 
 const SignUp: React.FC = () => {
   const navigation = hooks.useNavigation();
@@ -26,8 +26,11 @@ const SignUp: React.FC = () => {
   const renderTitles = () => {
     return (
       <View>
-        <components.Line style={{marginBottom: 14}} />
-        <text.H1 style={{textAlign: 'center', marginBottom: 40}}>
+        <custom.Image
+          source={require('../../assets/cooler-fai-logo.png')}
+          style={{ width: 60, height: 33, alignSelf: 'center', marginBottom: 14 }}
+        />
+        <text.H1 style={{ textAlign: 'center', marginBottom: 40 }}>
           Sign up
         </text.H1>
       </View>
@@ -36,7 +39,7 @@ const SignUp: React.FC = () => {
 
   const renderInputFields = () => {
     return (
-      <View style={{paddingHorizontal: 20}}>
+      <View style={{ paddingHorizontal: 20 }}>
         <custom.InputField
           label='name'
           placeholder='Kristin Watson'
@@ -78,7 +81,7 @@ const SignUp: React.FC = () => {
 
   const renderButton = () => {
     return (
-      <View style={{paddingHorizontal: 20, marginBottom: 20}}>
+      <View style={{ paddingHorizontal: 20, marginBottom: 20 }}>
         <components.Button
           title='Sign up'
           onPress={() => {
@@ -91,7 +94,7 @@ const SignUp: React.FC = () => {
 
   const renderIfDontHaveAccount = () => {
     return (
-      <View style={{paddingHorizontal: 20, marginBottom: 40}}>
+      <View style={{ paddingHorizontal: 20, marginBottom: 40 }}>
         <ParsedText
           style={{
             ...theme.fonts.Mulish_Regular,
@@ -102,7 +105,7 @@ const SignUp: React.FC = () => {
           parse={[
             {
               pattern: /Sign in./,
-              style: {color: theme.colors.mainColor},
+              style: { color: theme.colors.mainColor },
               onPress: () => navigation.navigate('SignIn'),
             },
           ]}
@@ -122,13 +125,10 @@ const SignUp: React.FC = () => {
           alignSelf: 'center',
         }}
       >
-        <View style={{paddingHorizontal: 5}}>
+        <View style={{ paddingHorizontal: 5 }}>
           <svg.FacebookSvg />
         </View>
-        <View style={{paddingHorizontal: 5}}>
-          <svg.TwitterSvg />
-        </View>
-        <View style={{paddingHorizontal: 5}}>
+        <View style={{ paddingHorizontal: 5 }}>
           <svg.GoogleSvg />
         </View>
       </View>
@@ -138,7 +138,7 @@ const SignUp: React.FC = () => {
   const renderContent = () => {
     return (
       <components.KAScrollView
-        contentContainerStyle={{paddingVertical: 20, justifyContent: 'center'}}
+        contentContainerStyle={{ paddingVertical: 20, justifyContent: 'center' }}
       >
         {renderTitles()}
         {renderInputFields()}

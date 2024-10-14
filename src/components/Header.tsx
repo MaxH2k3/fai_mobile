@@ -20,7 +20,7 @@ import {theme} from '../constants';
 import {components} from '../components';
 import {setScreen} from '../store/slices/tabSlice';
 import {statusBarHeight, homeIndicatorHeight, utils} from '../utils';
-import {hooks} from '../hooks';
+import { hooks } from '../hooks';
 
 type Props = {
   logo?: boolean;
@@ -226,7 +226,10 @@ const Header: React.FC<Props> = ({
     if (logo && !title) {
       return (
         <View style={{top: -3}}>
-          <svg.LogoSvg />
+          <custom.Image
+            source={require('../assets/cooler-fai-logo.png')}
+            style={{width: 60, height: 33}}
+          />
         </View>
       );
     }
@@ -348,18 +351,18 @@ const Header: React.FC<Props> = ({
       >
         <components.ContactsCategory
           icon={<svg.MapPinSmallSvg />}
-          titleLine1='27 Division St, New York,'
-          titleLine2='NY 10002, USA'
+          titleLine1='FPT University'
+          titleLine2='Nha Van Hoa Sinh Vien'
         />
         <components.ContactsCategory
           icon={<svg.MailSvg />}
-          titleLine1='manerosale@mail.com'
-          titleLine2='manerosupport@mail.com'
+          titleLine1='fashionai.innovation@gmail.com'
+          titleLine2='faisupport@mail.com'
         />
         <components.ContactsCategory
           icon={<svg.PhoneCallSvg />}
-          titleLine1='+17  123456789'
-          titleLine2='+17  987654321'
+          titleLine1='+84  942438547'
+          titleLine2='+84  862046364'
         />
       </ScrollView>
     );

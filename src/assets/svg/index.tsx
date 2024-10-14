@@ -20,6 +20,7 @@ import SearchSvg from './SearchSvg';
 import BagBigSvg from './BagBigSvg';
 import RatingSvg from './RatingSvg';
 import EyeOffSvg from './EyeOffSvg';
+import EyeOpenSvg from './EyeOpenSvg';
 import GoogleSvg from './GoogleSvg';
 import GoBackSvg from './GoBackSvg';
 import MapPinSvg from './MapPinSvg';
@@ -90,6 +91,7 @@ export const svg = {
   CameraSvg,
   BagBigSvg,
   EyeOffSvg,
+  EyeOpenSvg,
   SearchSvg,
   GoBackSvg,
   RatingSvg,
