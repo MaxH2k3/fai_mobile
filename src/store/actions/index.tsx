@@ -1,11 +1,11 @@
-import {setTag} from '../slices/tagSlice';
+import { setTag } from '../slices/tagSlice';
 import {
   removeFromCart,
   addToCart,
   fullRemoveFromCart,
 } from '../slices/cartSlice';
-import {setRefreshToken, setAccessToken} from '../slices/appStateSlice';
-import {addToWishlist, removeFromWishlist} from '../slices/wishlistSlice';
+import { setRefreshToken, setAccessToken, setRole, setUserName } from '../slices/appStateSlice';
+import { addToWishlist, removeFromWishlist } from '../slices/wishlistSlice';
 
 export const actions = {
   setTag,
@@ -14,6 +14,8 @@ export const actions = {
   removeFromCart,
   setAccessToken,
   setRefreshToken,
+  setRole,
+  setUserName,
   fullRemoveFromCart,
   removeFromWishlist,
 };

@@ -1,6 +1,6 @@
-import {useRoute} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {useSelector} from 'react-redux';
+import { useRoute } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import {
   View,
   Text,
@@ -11,15 +11,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Modal from 'react-native-modal';
-import {responsiveWidth} from 'react-native-responsive-dimensions';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
-import {text} from '../text';
-import {custom} from '../custom';
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {components} from '../components';
-import {setScreen} from '../store/slices/tabSlice';
-import {statusBarHeight, homeIndicatorHeight, utils} from '../utils';
+import { text } from '../text';
+import { custom } from '../custom';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { components } from '../components';
+import { setScreen } from '../store/slices/tabSlice';
+import { statusBarHeight, homeIndicatorHeight, utils } from '../utils';
 import { hooks } from '../hooks';
 
 type Props = {
@@ -39,7 +39,7 @@ type Props = {
   skipOnPress?: () => void;
 };
 
-import {useAppSelector} from '../hooks/selector';
+import { useAppSelector } from '../hooks/selector';
 
 const Header: React.FC<Props> = ({
   logo,
@@ -73,7 +73,7 @@ const Header: React.FC<Props> = ({
   // const total = hooks.useSelector((state) => state.cartSlice.total).toFixed(2);
   // const total = useSelector((state) => state.cartSlice.total);
 
-  console.log('total', total);
+  // console.log('total', total);
 
   const handleOnPress = () => {
     if (cart.length > 0) {
@@ -110,13 +110,13 @@ const Header: React.FC<Props> = ({
     if (userImage) {
       return (
         <TouchableOpacity
-          style={{...touchableStyle}}
+          style={{ ...touchableStyle }}
           onPress={() => {
             setShowModal(true);
           }}
         >
           <custom.Image
-            source={{uri: 'https://george-fx.github.io/dine-hub/10.jpg'}}
+            source={{ uri: 'https://george-fx.github.io/dine-hub/10.jpg' }}
             style={{
               width: 22,
               height: 22,
@@ -125,7 +125,7 @@ const Header: React.FC<Props> = ({
               borderRadius: 20 / 2,
             }}
           />
-          {userName && <Text style={{...textStyle}}>Jordan Hebert</Text>}
+          {userName && <Text style={{ ...textStyle }}>Jordan Hebert</Text>}
         </TouchableOpacity>
       );
     }
@@ -158,7 +158,7 @@ const Header: React.FC<Props> = ({
   const renderGoBack = () => {
     if (goBack && navigation.canGoBack()) {
       return (
-        <View style={{position: 'absolute', left: 0}}>
+        <View style={{ position: 'absolute', left: 0 }}>
           <TouchableOpacity
             style={{
               paddingVertical: 12,
@@ -213,7 +213,7 @@ const Header: React.FC<Props> = ({
 
     if (title) {
       return (
-        <Text style={{...titleStyle}} numberOfLines={1}>
+        <Text style={{ ...titleStyle }} numberOfLines={1}>
           {title}
         </Text>
       );
@@ -225,11 +225,8 @@ const Header: React.FC<Props> = ({
   const renderLogo = () => {
     if (logo && !title) {
       return (
-        <View style={{top: -3}}>
-          <custom.Image
-            source={require('../assets/cooler-fai-logo.png')}
-            style={{width: 60, height: 33}}
-          />
+        <View style={{ top: -3 }}>
+          <svg.LogoSvg />
         </View>
       );
     }
@@ -253,7 +250,7 @@ const Header: React.FC<Props> = ({
           }}
           onPress={() => navigation.navigate('Search')}
         >
-          <View style={{marginRight: 7}}>
+          <View style={{ marginRight: 7 }}>
             <svg.SearchSvg />
           </View>
           <text.T14>search</text.T14>
@@ -267,7 +264,7 @@ const Header: React.FC<Props> = ({
   const renderFilter = (): JSX.Element | null => {
     if (filter) {
       return (
-        <View style={{position: 'absolute', right: 0}}>
+        <View style={{ position: 'absolute', right: 0 }}>
           <TouchableOpacity
             style={{
               paddingVertical: 12,
@@ -295,7 +292,7 @@ const Header: React.FC<Props> = ({
           }}
           onPress={handleOnPress}
         >
-          <View style={{paddingLeft: 20, flexDirection: 'row'}}>
+          <View style={{ paddingLeft: 20, flexDirection: 'row' }}>
             <svg.BagSvg />
             <View
               style={{
@@ -330,7 +327,7 @@ const Header: React.FC<Props> = ({
 
   const renderContactsHeader = () => {
     return (
-      <View style={{paddingHorizontal: 20, marginBottom: 30, marginTop: 10}}>
+      <View style={{ paddingHorizontal: 20, marginBottom: 30, marginTop: 10 }}>
         <components.Line
           style={{
             backgroundColor: theme.colors.white,
@@ -338,7 +335,7 @@ const Header: React.FC<Props> = ({
             marginBottom: 14,
           }}
         />
-        <text.H2 style={{color: theme.colors.white}}>Contact us</text.H2>
+        <text.H2 style={{ color: theme.colors.white }}>Contact us</text.H2>
       </View>
     );
   };
@@ -346,7 +343,7 @@ const Header: React.FC<Props> = ({
   const renderContactsContent = () => {
     return (
       <ScrollView
-        contentContainerStyle={{flexGrow: 1}}
+        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
         <components.ContactsCategory
@@ -370,7 +367,7 @@ const Header: React.FC<Props> = ({
 
   const renderContactsFooter = () => {
     return (
-      <View style={{paddingHorizontal: 20, marginVertical: 20}}>
+      <View style={{ paddingHorizontal: 20, marginVertical: 20 }}>
         <Text
           style={{
             ...theme.fonts.Mulish_Regular,
@@ -419,7 +416,7 @@ const Header: React.FC<Props> = ({
               order number
             </Text>
           </View>
-          <Text style={{color: '#B3B9C7'}}>100345</Text>
+          <Text style={{ color: '#B3B9C7' }}>100345</Text>
           <View
             style={{
               width: 40,
@@ -444,7 +441,7 @@ const Header: React.FC<Props> = ({
         onBackdropPress={() => setShowModal(false)}
         hideModalContentWhileAnimating={true}
         backdropTransitionOutTiming={0}
-        style={{margin: 0, padding: 0}}
+        style={{ margin: 0, padding: 0 }}
         animationIn='slideInLeft'
         animationOut='slideOutLeft'
         animationInTiming={500}
@@ -481,7 +478,7 @@ const Header: React.FC<Props> = ({
   };
 
   return (
-    <View style={{...containerStyle}}>
+    <View style={{ ...containerStyle }}>
       {renderUser()}
       {renderBurger()}
       {renderGoBack()}

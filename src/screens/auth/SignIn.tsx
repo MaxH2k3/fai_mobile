@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ParsedText from 'react-native-parsed-text';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ToastAndroid } from 'react-native';
 
 import { text } from '../../text';
 import { hooks } from '../../hooks';
@@ -9,12 +9,80 @@ import { svg } from '../../assets/svg';
 import { theme } from '../../constants';
 import { actions } from '../../store/actions';
 import { components } from '../../components';
+import { ILoginUserData } from '../../constants/model/user-interface';
+import { EmailPasswordSignin } from '../../api/user-api';
+import { utils } from '../../utils';
+import { Token, User } from '../../constants/enum/storage-enum';
+import { storeData } from '../../utils/storage-utils';
+import { queryHooks } from '../../store/slices/apiSlice';
+import { setScreen } from '../../store/slices/tabSlice';
 
 const SignIn: React.FC = () => {
   const dispatch = hooks.useDispatch();
   const navigation = hooks.useNavigation();
 
-  const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false)
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('')
+
+  // if (loading) {
+  //   return <components.Loader />;
+  // }
+
+  const {
+    data: productsData,
+    error: productsError,
+    isLoading: productsLoading,
+  } = queryHooks.useGetProductsQuery();
+  const products = productsData instanceof Array ? productsData : [];
+  console.log(loading)
+
+  const HandleLogin = async () => {
+    setLoading(true)
+    const data: ILoginUserData = {
+      email: email,
+      password: password
+    }
+
+    const res = await EmailPasswordSignin(data)
+
+    if (res) {
+      console.log(res)
+      setLoading(false)
+      if (res.success) {
+
+        utils.showMessage({
+          message: 'Login successful',
+          type: 'success',
+          icon: 'success'
+        })
+
+        dispatch(actions.setAccessToken(res.data.data.token))
+        dispatch(actions.setRole(res.data.data.roleName))
+        dispatch(actions.setUserName(res.data.data.lastName + " " + res.data.data.firstName))
+        dispatch(setScreen('Home'))
+
+        // storeData(Token.JWT_TOKEN, res.data.data.token)
+        // storeData(User.USER_NAME, res.data.data.lastName + " " + res.data.data.firstName)
+        // storeData(User.USER_ROLE, res.data.data.roleName)
+
+        navigation.navigate('TabNavigator')
+
+        // navigation.navigate('Shop', {
+        //   title: 'Shop',
+        //   products: products,
+        // });
+
+      } else {
+        utils.showMessage({
+          message: res.message,
+          type: 'danger',
+          icon: 'danger'
+        })
+      }
+    }
+  }
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -56,20 +124,24 @@ const SignIn: React.FC = () => {
       <View style={{ paddingHorizontal: 20 }}>
         <custom.InputField
           label='Email'
-          placeholder='kristinwatson@mail.com'
+          placeholder='example@mail.com'
           containerStyle={{
             marginBottom: 20,
           }}
+          value={email}
           checkIcon={true}
+          onChangeText={(value) => setEmail(value)}
         />
         <custom.InputField
           label='Password'
           placeholder='••••••••'
           secureTextEntry={true}
           eyeOffIcon={true}
+          value={password}
           containerStyle={{
             marginBottom: 20,
           }}
+          onChangeText={(value) => setPassword(value)}
         />
       </View>
     );
@@ -86,44 +158,6 @@ const SignIn: React.FC = () => {
           marginBottom: 30,
         }}
       >
-        <TouchableOpacity
-          style={{ flexDirection: 'row', alignItems: 'center' }}
-          onPress={() => setRememberMe(!rememberMe)}
-        >
-          <View
-            style={{
-              width: 18,
-              height: 18,
-              borderWidth: 2,
-              borderRadius: 5,
-              borderColor: theme.colors.lightBlue,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {rememberMe && (
-              <View
-                style={{
-                  width: 10,
-                  height: 10,
-                  backgroundColor: theme.colors.lightBlue,
-                  borderRadius: 2,
-                }}
-              />
-            )}
-          </View>
-          <Text
-            style={{
-              ...theme.fonts.Mulish_Regular,
-              fontSize: 16,
-              lineHeight: 16 * 1.7,
-              marginLeft: 12,
-              color: theme.colors.textColor,
-            }}
-          >
-            Remember me
-          </Text>
-        </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
           <Text
             style={{
@@ -145,10 +179,7 @@ const SignIn: React.FC = () => {
       <View style={{ paddingHorizontal: 20, marginBottom: 20 }}>
         <components.Button
           title='Sign in'
-          onPress={() => {
-            dispatch(actions.setRefreshToken('refreshToken'));
-            dispatch(actions.setAccessToken('accessToken'));
-          }}
+          onPress={HandleLogin}
         />
       </View>
     );
@@ -189,6 +220,9 @@ const SignIn: React.FC = () => {
       >
         <View style={{ paddingHorizontal: 5 }}>
           <svg.FacebookSvg />
+        </View>
+        <View style={{ paddingHorizontal: 5 }}>
+          <svg.TwitterSvg />
         </View>
         <View style={{ paddingHorizontal: 5 }}>
           <svg.GoogleSvg />
