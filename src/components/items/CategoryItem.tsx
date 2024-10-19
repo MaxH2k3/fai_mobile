@@ -1,21 +1,36 @@
-import {View, TouchableOpacity} from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import React from 'react';
 
-import {text} from '../../text';
-import {hooks} from '../../hooks';
-import {custom} from '../../custom';
-import {theme} from '../../constants';
-import {CategoryType, ProductType} from '../../types';
+import { text } from '../../text';
+import { hooks } from '../../hooks';
+import { custom } from '../../custom';
+import { theme } from '../../constants';
+import { CategoryType, ProductType } from '../../types';
+import { Category } from '../../constants/model/common';
+import { IProductMain } from '../../constants/model/product-interface';
+import { useQuery } from '@tanstack/react-query';
+import { useProductsQuery } from '../../api/query/product-query';
+import { ProductAPIEnum } from '../../constants/enum/product-enum';
 
 type Props = {
-  item: CategoryType;
+  item: Category;
   divisibleByThree: boolean;
-  products?: ProductType[];
 };
 
-const CategoryItem: React.FC<Props> = ({item, divisibleByThree, products}) => {
-  const navigation = hooks.useNavigation();
-  const data = products instanceof Array ? products : [];
+const CategoryItem: React.FC<Props> = ({ item, divisibleByThree }) => {
+
+  const { data, isLoading } = useQuery(
+    useProductsQuery({
+      Categories: [item.name],
+      Page: 1,
+      EachPage: ProductAPIEnum.ITEM_PER_PAGE,
+    })
+  );
+
+  const products: IProductMain[] = data?.data.data || [];
+
+  const navigation = hooks.useNavigation()
+
   return (
     <TouchableOpacity
       style={{
@@ -26,16 +41,14 @@ const CategoryItem: React.FC<Props> = ({item, divisibleByThree, products}) => {
         height: divisibleByThree ? 170 : 187,
       }}
       onPress={() => {
-        navigation.navigate('Shop', {
+        navigation.navigate('ProductList', {
           title: item.name,
-          products: data.filter((product) =>
-            product.categories.includes(item.name),
-          ),
+          products: products
         });
       }}
     >
       <custom.Image
-        source={{uri: item.image || ''}}
+        source={{ uri: item.image || '' }}
         style={{
           width: '100%',
           height: '100%',
@@ -59,7 +72,7 @@ const CategoryItem: React.FC<Props> = ({item, divisibleByThree, products}) => {
           left: 0,
         }}
       >
-        <text.H3 style={{color: theme.colors.white}}>{item.name}</text.H3>
+        <text.H3 style={{ color: theme.colors.white }}>{item.name}</text.H3>
       </View>
     </TouchableOpacity>
   );

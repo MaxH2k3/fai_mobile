@@ -26,17 +26,9 @@ const SignIn: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
 
-  // if (loading) {
-  //   return <components.Loader />;
-  // }
-
-  const {
-    data: productsData,
-    error: productsError,
-    isLoading: productsLoading,
-  } = queryHooks.useGetProductsQuery();
-  const products = productsData instanceof Array ? productsData : [];
-  console.log(loading)
+  if (loading) {
+    return <components.Loader />;
+  }
 
   const HandleLogin = async () => {
     setLoading(true)
@@ -48,7 +40,6 @@ const SignIn: React.FC = () => {
     const res = await EmailPasswordSignin(data)
 
     if (res) {
-      console.log(res)
       setLoading(false)
       if (res.success) {
 
@@ -57,22 +48,15 @@ const SignIn: React.FC = () => {
           type: 'success',
           icon: 'success'
         })
-
+        storeData(Token.JWT_TOKEN, res.data.data.token)
         dispatch(actions.setAccessToken(res.data.data.token))
         dispatch(actions.setRole(res.data.data.roleName))
         dispatch(actions.setUserName(res.data.data.lastName + " " + res.data.data.firstName))
+        dispatch(actions.setEmail(res.data.data.email))
+        dispatch(actions.setUser(res.data.data))
+
         dispatch(setScreen('Home'))
-
-        // storeData(Token.JWT_TOKEN, res.data.data.token)
-        // storeData(User.USER_NAME, res.data.data.lastName + " " + res.data.data.firstName)
-        // storeData(User.USER_ROLE, res.data.data.roleName)
-
         navigation.navigate('TabNavigator')
-
-        // navigation.navigate('Shop', {
-        //   title: 'Shop',
-        //   products: products,
-        // });
 
       } else {
         utils.showMessage({
@@ -95,7 +79,6 @@ const SignIn: React.FC = () => {
   const renderTitles = () => {
     return (
       <View>
-        {/* <components.Line style={{ marginBottom: 14 }} /> */}
         <custom.Image
           source={require('../../assets/cooler-fai-logo.png')}
           style={{ width: 60, height: 33, alignSelf: 'center', marginBottom: 14 }}
@@ -209,28 +192,6 @@ const SignIn: React.FC = () => {
     );
   };
 
-  const renderSocials = () => {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'center',
-        }}
-      >
-        <View style={{ paddingHorizontal: 5 }}>
-          <svg.FacebookSvg />
-        </View>
-        <View style={{ paddingHorizontal: 5 }}>
-          <svg.TwitterSvg />
-        </View>
-        <View style={{ paddingHorizontal: 5 }}>
-          <svg.GoogleSvg />
-        </View>
-      </View>
-    );
-  };
-
   const renderContent = () => {
     return (
       <components.KAScrollView
@@ -241,7 +202,6 @@ const SignIn: React.FC = () => {
         {renderAdditionalButtons()}
         {renderButton()}
         {renderIfDontHaveAccount()}
-        {renderSocials()}
       </components.KAScrollView>
     );
   };

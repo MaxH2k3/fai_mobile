@@ -1,14 +1,15 @@
-import {View, Text, TouchableOpacity} from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 // import LinearGradient from 'react-native-linear-gradient';
 
-import {theme} from '../constants';
+import { theme } from '../constants';
 
 type Props = {
   title: string;
   onPress?: () => void;
   containerStyle?: object;
   transparent?: boolean;
+  disabled?: boolean
 };
 
 const Button: React.FC<Props> = ({
@@ -16,6 +17,7 @@ const Button: React.FC<Props> = ({
   onPress,
   containerStyle,
   transparent = false,
+  disabled
 }): JSX.Element => {
   return (
     <TouchableOpacity
@@ -24,13 +26,14 @@ const Button: React.FC<Props> = ({
         height: 50,
         borderRadius: 25,
         borderColor: theme.colors.textColor,
-        backgroundColor: transparent ? '#FAFCFE' : theme.colors.mainColor,
+        backgroundColor: transparent ? '#FAFCFE' : disabled ? 'gray' : theme.colors.mainColor,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         ...containerStyle,
       }}
       onPress={onPress}
+      disabled={disabled || false}
     >
       <Text
         style={{

@@ -1,18 +1,39 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import {responsiveWidth} from 'react-native-responsive-dimensions';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
-import {text} from '../../text';
-import {hooks} from '../../hooks';
-import {custom} from '../../custom';
-import {svg} from '../../assets/svg';
-import {theme} from '../../constants';
-import {actions} from '../../store/actions';
-import {components} from '../../components';
+import { text } from '../../text';
+import { hooks } from '../../hooks';
+import { custom } from '../../custom';
+import { svg } from '../../assets/svg';
+import { theme } from '../../constants';
+import { actions } from '../../store/actions';
+import { components } from '../../components';
+import { ILoggedInUserData, IUserProfile } from '../../constants/model/user-interface';
+import { useQuery } from '@tanstack/react-query';
+import { useUserProfile } from '../../api/query/user-query';
+
+
 
 const Profile: React.FC = () => {
   const dispatch = hooks.useDispatch();
   const navigation = hooks.useNavigation();
+
+  const currentUser: ILoggedInUserData | null = hooks.useSelector((state) => state.appState.user)
+
+  const { data, isLoading } = useQuery(
+    useUserProfile({
+      key: currentUser!.email
+    })
+  );
+
+  const userData: IUserProfile = data?.data.data
+
+  if (isLoading) {
+    return (
+      <components.Loader />
+    )
+  }
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -33,8 +54,8 @@ const Profile: React.FC = () => {
     const width = responsiveWidth(34);
 
     return (
-      <View style={{marginBottom: 20}}>
-        <components.Line style={{marginBottom: 20}} />
+      <View style={{ marginBottom: 20 }}>
+        <components.Line style={{ marginBottom: 20 }} />
         <TouchableOpacity
           style={{
             width: width,
@@ -46,20 +67,21 @@ const Profile: React.FC = () => {
             borderColor: theme.colors.lightBlue,
           }}
           onPress={() => {
-            navigation.navigate('EditProfile');
+            navigation.navigate('EditProfile', { user: userData });
           }}
         >
           <custom.Image
-            source={{uri: 'https://george-fx.github.io/manero/users/01.jpg'}}
-            style={{width: '100%', height: '100%'}}
-            imageStyle={{borderRadius: width / 2}}
+            source={{ uri: currentUser!.avatar }}
+            style={{ width: '100%', height: '100%' }}
+            imageStyle={{ borderRadius: width / 2 }}
+            resizeMode='cover'
           />
-          <View style={{position: 'absolute', right: -3, bottom: -3}}>
+          <View style={{ position: 'absolute', right: -3, bottom: -3 }}>
             <svg.EditSvg />
           </View>
         </TouchableOpacity>
-        <text.H3 style={{textAlign: 'center', marginBottom: 2}}>
-          Kristin Watson
+        <text.H3 style={{ textAlign: 'center', marginBottom: 2 }}>
+          {currentUser!.lastName + ' ' + currentUser!.firstName}
         </text.H3>
         <Text
           style={{
@@ -70,7 +92,7 @@ const Profile: React.FC = () => {
             lineHeight: 14 * 1.7,
           }}
         >
-          kristinwatson@mail.com
+          {currentUser!.email}
         </Text>
       </View>
     );
@@ -80,39 +102,49 @@ const Profile: React.FC = () => {
     return (
       <View>
         <components.ProfileCategory
+          title='Personal information'
+          icon={<svg.CardSvg />}
+          onPress={() => {
+            navigation.navigate('EditPersonalProfile', { user: userData });
+          }}
+        />
+        <components.ProfileCategory
           title='Order history'
           icon={<svg.CalendarSvg />}
           onPress={() => {
             navigation.navigate('OrderHistory');
           }}
         />
-        <components.ProfileCategory
+        {/* <components.ProfileCategory
           title='Payment method'
           icon={<svg.CardSvg />}
           onPress={() => {
             navigation.navigate('PaymentMethod');
           }}
-        />
-        <components.ProfileCategory
+        /> */}
+        {/* <components.ProfileCategory
           title='My address'
           icon={<svg.MapPinSvg />}
           onPress={() => {
             navigation.navigate('MyAddress');
           }}
-        />
-        <components.ProfileCategory
-          title='My promocodes'
-          icon={<svg.GiftSvg />}
-          onPress={() => {
+        /> */}
+        {/* <components.ProfileCategory
+          title='My promocodes'                  
+          icon={<svg.GiftSvg />}                
+          onPress={() => {                      
             navigation.navigate('MyPromocodes');
-          }}
-        />
+          }}                                    
+        /> */}
         <components.ProfileCategory
           title='Sign out'
           icon={<svg.LogOutSvg />}
           onPress={() => {
-            dispatch(actions.setAccessToken(null));
-            dispatch(actions.setRefreshToken(null));
+            dispatch(actions.setAccessToken(null))
+            dispatch(actions.setRole(null))
+            dispatch(actions.setUserName(null))
+            dispatch(actions.setEmail(null))
+            dispatch(actions.setUser(null))
           }}
         />
       </View>
@@ -122,7 +154,7 @@ const Profile: React.FC = () => {
   const renderContent = () => {
     return (
       <custom.ScrollView
-        contentContainerStyle={{flexGrow: 1, paddingVertical: 20}}
+        contentContainerStyle={{ flexGrow: 1, paddingVertical: 20 }}
         showsVerticalScrollIndicator={false}
       >
         {renderUserInfo()}

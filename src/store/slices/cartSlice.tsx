@@ -1,11 +1,12 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import type {ProductType} from '../../types';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { ProductType } from '../../types';
+import { ICartItem } from '../../constants/model/cart-interface';
 
 const initialState = {
-  list: [] as ProductType[],
+  list: [] as ICartItem[],
   total: 0,
-  discount: 2.88,
-  delivery: 2,
+  // discount: 2.88,
+  // delivery: 2,
 };
 
 type StateType = typeof initialState;
@@ -16,12 +17,12 @@ export const cartSlice = createSlice({
   reducers: {
     addToCart: (
       state: StateType = initialState,
-      action: PayloadAction<ProductType>,
+      action: PayloadAction<ICartItem>,
     ) => {
       const inCart = state.list.find((item) => item.id === action.payload.id);
 
       if (inCart) {
-        state.list.map((item: ProductType) => {
+        state.list.map((item: ICartItem) => {
           if (item.id === action.payload.id) {
             if (item.quantity) {
               item.quantity += 1;
@@ -40,7 +41,7 @@ export const cartSlice = createSlice({
         state.total += Number(action.payload.price);
       }
     },
-    removeFromCart: (state, action: PayloadAction<ProductType>) => {
+    removeFromCart: (state, action: PayloadAction<ICartItem>) => {
       const inCart = state.list.find((item) => item.id === action.payload.id);
 
       if (inCart) {
@@ -79,7 +80,7 @@ export const cartSlice = createSlice({
   },
 });
 
-export const {addToCart, removeFromCart, resetCart, fullRemoveFromCart} =
+export const { addToCart, removeFromCart, resetCart, fullRemoveFromCart } =
   cartSlice.actions;
 
 export default cartSlice.reducer;

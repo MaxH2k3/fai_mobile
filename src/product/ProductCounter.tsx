@@ -1,20 +1,19 @@
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
 
-import {utils} from '../utils';
-import {hooks} from '../hooks';
-import {custom} from '../custom';
-import {svg} from '../assets/svg';
-import {ProductType} from '../types';
-import {actions} from '../store/actions';
-import {theme} from '../constants';
+import { utils } from '../utils';
+import { hooks } from '../hooks';
+import { custom } from '../custom';
+import { svg } from '../assets/svg';
+import { ProductType } from '../types';
+import { actions } from '../store/actions';
+import { theme } from '../constants';
+import { ICartItem } from '../constants/model/cart-interface';
 
-type Props = {item: ProductType};
+type Props = { item: ICartItem };
 
-const ProductCounter: React.FC<Props> = ({item}) => {
+const ProductCounter: React.FC<Props> = ({ item }) => {
   const dispatch = hooks.useDispatch();
-
-  const quantity = utils.quantityInCart(item);
 
   return (
     <View
@@ -38,7 +37,7 @@ const ProductCounter: React.FC<Props> = ({item}) => {
           color: theme.colors.textColor,
         }}
       >
-        {quantity}
+        {item.quantity}
       </Text>
       <custom.TouchableOpacity
         onPress={() => {

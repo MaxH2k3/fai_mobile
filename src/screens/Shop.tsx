@@ -1,13 +1,13 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 
-import {svg} from '../assets/svg';
-import {custom} from '../custom';
-import {components} from '../components';
-import {ShopScreenProps, hooks} from '../hooks';
+import { svg } from '../assets/svg';
+import { custom } from '../custom';
+import { components } from '../components';
+import { ShopScreenProps, hooks } from '../hooks';
 
-const Shop: React.FC<ShopScreenProps> = ({route}) => {
-  const {title, products} = route.params;
+const Shop: React.FC<ShopScreenProps> = ({ route }) => {
+  const { title, products } = route.params;
   const navigation = hooks.useNavigation();
 
   const renderStatusBar = () => {
@@ -59,8 +59,8 @@ const Shop: React.FC<ShopScreenProps> = ({route}) => {
             flexGrow: 1,
             paddingBottom: 20,
           }}
-          columnWrapperStyle={{justifyContent: 'space-between'}}
-          renderItem={({item, index}) => {
+          columnWrapperStyle={{ justifyContent: 'space-between' }}
+          renderItem={({ item, index }) => {
             const lastItem = index === products.length - 1;
             return (
               <components.ShopItem

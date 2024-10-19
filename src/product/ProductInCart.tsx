@@ -1,17 +1,18 @@
 import React from 'react';
-import {TouchableOpacity, Alert} from 'react-native';
+import { TouchableOpacity, Alert } from 'react-native';
 
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {ProductType} from '../types';
-import {showMessage} from 'react-native-flash-message';
-import {addToCart} from '../store/slices/cartSlice';
-import {hooks} from '../hooks';
-import {removeFromCart} from '../store/slices/cartSlice';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { ProductType } from '../types';
+import { showMessage } from 'react-native-flash-message';
+import { addToCart } from '../store/slices/cartSlice';
+import { hooks } from '../hooks';
+import { removeFromCart } from '../store/slices/cartSlice';
+import { ICartItem } from '../constants/model/cart-interface';
 
 type Props = {
   version?: number;
-  item: ProductType;
+  item: ICartItem;
   containerStyle?: object;
 };
 
@@ -22,7 +23,7 @@ const ProductInCart: React.FC<Props> = ({
 }): JSX.Element => {
   const dispatch = hooks.useDispatch();
   const cart = hooks.useSelector((state) => state.cartSlice.list);
-  const exist = (item: ProductType) => cart.find((i) => i.id === item.id);
+  const exist = (item: ICartItem) => cart.find((i) => i.id === item.id);
   const strokeColor = exist(item)
     ? theme.colors.accent
     : theme.colors.textColor;
@@ -55,7 +56,7 @@ const ProductInCart: React.FC<Props> = ({
 
   return (
     <TouchableOpacity
-      style={{...containerStyle}}
+      style={{ ...containerStyle }}
       onPress={() => {
         if (exist(item)) {
           itemExistMessage();

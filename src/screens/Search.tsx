@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -10,12 +10,15 @@ import {
   InteractionManager,
 } from 'react-native';
 
-import {hooks} from '../hooks';
-import {custom} from '../custom';
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {components} from '../components';
-import {queryHooks} from '../store/slices/apiSlice';
+import { hooks } from '../hooks';
+import { custom } from '../custom';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { components } from '../components';
+import { queryHooks } from '../store/slices/apiSlice';
+import { useQuery } from '@tanstack/react-query';
+import { useSearchProductQuery } from '../api/query/product-query';
+import { IProductSearch } from '../constants/model/product-interface';
 
 const Search: React.FC = () => {
   const navigation = hooks.useNavigation();
@@ -29,13 +32,9 @@ const Search: React.FC = () => {
   // when user clicks on search icon again, the search bar will be blurred
   // when user clicks on search icon again, the search bar will be focused
 
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const {data, error, isLoading} = queryHooks.useGetProductsQuery();
-
-  const products = data instanceof Array ? data : [];
-
   const ref = useRef<TextInput>(null);
+
+  const [inputValue, setInputValue] = useState<string>('')
 
   // setTimeout(() => {
   //   ref.current?.focus();
@@ -48,13 +47,14 @@ const Search: React.FC = () => {
     // });
   }, []);
 
-  if (isLoading) {
-    return <components.Loader />;
-  }
+  const { data, isLoading } = useQuery(
+    useSearchProductQuery({
+      SearchTerm: inputValue,
+      ProductCount: 10,
+    })
+  );
 
-  const handleSearch = (text: string) => {
-    setSearchQuery(text);
-  };
+  const searchResult: IProductSearch[] = data?.data || [];
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -97,8 +97,8 @@ const Search: React.FC = () => {
             autoCorrect={false}
             autoFocus={true}
             style={inputStyle}
-            value={searchQuery}
-            onChangeText={(text) => handleSearch(text)}
+            value={inputValue}
+            onChangeText={(text) => setInputValue(text)}
           />
         </View>
         <TouchableOpacity
@@ -122,7 +122,7 @@ const Search: React.FC = () => {
     );
   };
 
-  const renderItem = ({item, index}: any) => {
+  const renderItem = (item: IProductSearch) => {
     return (
       <TouchableOpacity
         style={{
@@ -134,10 +134,18 @@ const Search: React.FC = () => {
           alignItems: 'center',
         }}
         onPress={() => {
-          navigation.navigate('Product', {item});
+          navigation.navigate('ProductDetail', { name: item.name });
         }}
       >
-        <svg.SearchSmallSvg />
+        <custom.ImageBackground
+          source={{ uri: item.image }}
+          style={{
+            width: 40,
+            height: 40,
+            marginRight: 14,
+          }}
+          resizeMode='cover'
+        />
         <Text
           style={{
             ...theme.fonts.Mulish_Regular,
@@ -176,19 +184,15 @@ const Search: React.FC = () => {
   };
 
   const renderSearchResults = () => {
-    const filteredProducts = products.filter((item) => {
-      return item.name.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-
     return (
       <FlatList
-        data={filteredProducts}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{flexGrow: 1}}
-        keyboardShouldPersistTaps='handled' // when user taps on the screen, the keyboard will be hidden
-        keyboardDismissMode='on-drag' // when user drags the screen, the keyboard will be hidden
+        data={searchResult}
+        keyExtractor={(item) => item.name}
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps='handled'
+        keyboardDismissMode='on-drag'
         ListEmptyComponent={() => renderEmptyComponent()}
-        renderItem={({item, index}) => renderItem({item, index})}
+        renderItem={({ item }) => renderItem(item)}
       />
     );
   };
@@ -197,7 +201,9 @@ const Search: React.FC = () => {
     <custom.SmartView>
       {renderStatusBar()}
       {renderSearchBar()}
-      {renderSearchResults()}
+      {!isLoading && (
+        renderSearchResults()
+      )}
     </custom.SmartView>
   );
 };

@@ -1,14 +1,17 @@
-import React from 'react';
-import {View, Text} from 'react-native';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import React, { useState } from 'react';
+import { View, Text } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import {hooks} from '../../hooks';
-import {custom} from '../../custom';
-import {theme} from '../../constants';
-import {components} from '../../components';
+import { hooks } from '../../hooks';
+import { custom } from '../../custom';
+import { theme } from '../../constants';
+import { components } from '../../components';
 
 const NewPassword: React.FC = () => {
   const navigation = hooks.useNavigation();
+
+  const [otp, setOtp] = useState('')
+  const [newPassword, setNewpassword] = useState('')
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -38,21 +41,19 @@ const NewPassword: React.FC = () => {
             color: theme.colors.textColor,
           }}
         >
-          Enter new password and confirm.
+          Enter new password and OTP.
         </Text>
+        <custom.InputField
+          placeholder='OTP...'
+          label='OTP'
+          containerStyle={{ marginBottom: 20 }}
+        />
         <custom.InputField
           placeholder='••••••••'
           label='new password'
           secureTextEntry={true}
           eyeOffIcon={true}
-          containerStyle={{marginBottom: 20}}
-        />
-        <custom.InputField
-          placeholder='••••••••'
-          secureTextEntry={true}
-          eyeOffIcon={true}
-          label='confirm password'
-          containerStyle={{marginBottom: 20}}
+          containerStyle={{ marginBottom: 20 }}
         />
         <components.Button
           title='change password'

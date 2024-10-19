@@ -87,12 +87,12 @@ export interface IStatistic {
 
 export interface IFeedback {
     userId: string;
-    productId: string;
-    name: string;
-    content: string;
-    rating: number;
-    createdAt: string;
-    updatedAt: string;
+    fullName: string;
+    avatar: string;
+    content: string
+    rating: number
+    createdAt: string
+    updatedAt: string
 }
 
 export interface ICreateProductData {

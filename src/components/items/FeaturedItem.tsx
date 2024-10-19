@@ -1,27 +1,27 @@
 import React from 'react';
-import {View, Text} from 'react-native';
-import {TouchableOpacity} from 'react-native';
-import {responsiveWidth} from 'react-native-responsive-dimensions';
+import { View, Text } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { responsiveWidth } from 'react-native-responsive-dimensions';
 
-import {hooks} from '../../hooks';
-import {custom} from '../../custom';
-import {product} from '../../product';
-import {ProductType} from '../../types';
+import { hooks } from '../../hooks';
+import { custom } from '../../custom';
+import { product } from '../../product';
+import { ProductType } from '../../types';
 import SaleBadge from '../badges/SaleBadge';
 
-type Props = {item: ProductType; lastItem: boolean};
+type Props = { item: ProductType; lastItem: boolean };
 
-const FeaturedItem: React.FC<Props> = ({item, lastItem}) => {
+const FeaturedItem: React.FC<Props> = ({ item, lastItem }) => {
   const navigation = hooks.useNavigation();
   return (
     <TouchableOpacity
-      style={{marginRight: lastItem ? 20 : 14}}
+      style={{ marginRight: lastItem ? 20 : 14 }}
       onPress={() => {
-        navigation.navigate('Product', {item});
+        navigation.navigate('Product', { item });
       }}
     >
       <custom.ImageBackground
-        source={{uri: item.image}}
+        source={{ uri: item.image }}
         style={{
           width: responsiveWidth(36),
           aspectRatio: 138 / 170,
@@ -54,7 +54,7 @@ const FeaturedItem: React.FC<Props> = ({item, lastItem}) => {
           width: responsiveWidth(36),
         }}
       >
-        <product.ProductRating item={item} containerStyle={{marginBottom: 4}} />
+        <product.ProductRating item={item} containerStyle={{ marginBottom: 4 }} />
         <product.ProductName item={item} />
         <product.ProductPrice item={item} />
       </View>

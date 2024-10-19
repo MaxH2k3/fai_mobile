@@ -1,5 +1,5 @@
 import axios from "axios"
-import { authApiConfig, createBrandProfile, createCustomerProfile, createQueryString, forgotPassword, getBrandRevenueStatistics, getBrandReviewStatistics, getBrandReviewStatisticsWithDate, getBrandTotalProductCount, getBrandTotalProductSold, getBrandTotalRevenue, getTopBrands, getUserProfile, googleLogin, login, logout, register, resendOTP, resetPassword, updateUserProfile, verify } from "./api-config"
+import { createBrandProfile, createCustomerProfile, createQueryString, forgotPassword, getBrandRevenueStatistics, getBrandReviewStatistics, getBrandReviewStatisticsWithDate, getBrandTotalProductCount, getBrandTotalProductSold, getBrandTotalRevenue, getTopBrands, getUserProfile, googleLogin, login, logout, register, resendOTP, resetPassword, updateUserProfile, verify } from "./api-config"
 import { IBrandProfileData, ICustomerProfileData, IForgotPasswordData, IGoogleLoginUserData, ILoginUserData, IRegisterUserData, IResendOTPData, IResetPasswordData, IVerifyUserData } from "../constants/model/user-interface";
 
 export const EmailPasswordSignin = async (data: ILoginUserData) => {
@@ -130,15 +130,16 @@ export const Verify = async (data: IVerifyUserData) => {
     }
 }
 
-export const Logout = async () => {
-    const config = authApiConfig();
+export const Logout = async (token: string) => {
 
-    if (!config) {
-        return;
-    }
 
     try {
-        const response = await axios.post(logout, {}, config);
+        const response = await axios.post(logout, {}, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data',
+            },
+        });
         return {
             success: true,
             status: response.status,
@@ -193,7 +194,7 @@ export const Resend = async (data: IResendOTPData) => {
     }
 }
 
-export const ForgotPassword = async (data: IForgotPasswordData) => {
+export const ForgotPasswordd = async (data: IForgotPasswordData) => {
 
     try {
         const response = await axios.post(forgotPassword, {
@@ -255,13 +256,7 @@ export const ResetPassword = async (data: IResetPasswordData) => {
     }
 }
 
-export const CreateCustomerProfile = async (data: ICustomerProfileData) => {
-
-    const config = authApiConfig();
-
-    if (!config) {
-        return;
-    }
+export const CreateCustomerProfile = async (data: ICustomerProfileData, token: string) => {
 
     try {
         const response = await axios.put(
@@ -270,7 +265,11 @@ export const CreateCustomerProfile = async (data: ICustomerProfileData) => {
                 address: data.address,
                 age: data.age
             },
-            config);
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+            });
         return {
             success: true,
             status: response.status,
@@ -295,13 +294,7 @@ export const CreateCustomerProfile = async (data: ICustomerProfileData) => {
     }
 }
 
-export const CreateBrandProfile = async (data: IBrandProfileData) => {
-
-    const config = authApiConfig();
-
-    if (!config) {
-        return;
-    }
+export const CreateBrandProfile = async (data: IBrandProfileData, token: string) => {
 
     try {
         const response = await axios.put(
@@ -310,7 +303,11 @@ export const CreateBrandProfile = async (data: IBrandProfileData) => {
                 address: data.address,
                 taxCode: data.taxcode
             },
-            config);
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
         return {
             success: true,
             status: response.status,
@@ -335,13 +332,7 @@ export const CreateBrandProfile = async (data: IBrandProfileData) => {
     }
 }
 
-export const UpdateUserProfile = async (data: FormData) => {
-
-    const config = authApiConfig();
-
-    if (!config) {
-        return;
-    }
+export const UpdateUserProfile = async (data: FormData, token: string) => {
 
     try {
         const response = await axios.put(
@@ -349,7 +340,7 @@ export const UpdateUserProfile = async (data: FormData) => {
             data,
             {
                 headers: {
-                    ...config.headers,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });

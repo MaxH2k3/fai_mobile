@@ -1,29 +1,29 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, ScrollView, TouchableOpacity, Alert} from 'react-native';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import {text} from '../text';
-import {hooks} from '../hooks';
-import {utils} from '../utils';
-import {custom} from '../custom';
-import {product} from '../product';
-import {theme} from '../constants';
-import {reviews} from '../constants';
-import {actions} from '../store/actions';
-import {components} from '../components';
-import type {RootStackParamList} from '../types';
-import {queryHooks} from '../store/slices/apiSlice';
+import { text } from '../text';
+import { hooks } from '../hooks';
+import { utils } from '../utils';
+import { custom } from '../custom';
+import { product } from '../product';
+import { theme } from '../constants';
+import { reviews } from '../constants';
+import { actions } from '../store/actions';
+import { components } from '../components';
+import type { RootStackParamList } from '../types';
+import { queryHooks } from '../store/slices/apiSlice';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Product'>;
 
-const Product: React.FC<Props> = ({route}) => {
-  const {item} = route.params;
+const Product: React.FC<Props> = ({ route }) => {
+  const { item } = route.params;
   const dispatch = hooks.useDispatch();
   const navigation = hooks.useNavigation();
 
   const cart = hooks.useSelector((state) => state.cartSlice.list);
 
-  const {data, error, isLoading} = queryHooks.useGetColorsQuery();
+  const { data, error, isLoading } = queryHooks.useGetColorsQuery();
 
   const names = item.colors as string[];
   const images = JSON.parse(item.images) as string[];
@@ -33,13 +33,12 @@ const Product: React.FC<Props> = ({route}) => {
 
   type SelectedColorType = (typeof colors)[number] | undefined;
 
-  const ifExist = cart?.find((el) => el.id === item.id);
+  // const ifExist = cart?.find((el) => el.id === item.id);
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState(item?.sizes?.[0]);
   const [selectedColor, setSelectedColor] = useState<SelectedColorType>();
 
-  console.log('selectedColor >>>>>', selectedColor);
 
   const newItem = {
     ...item,
@@ -65,50 +64,52 @@ const Product: React.FC<Props> = ({route}) => {
     return <components.Loader />;
   }
 
-  const onPress = () => {
-    const renderAlert = () => {
-      if (quantity > 0) {
-        Alert.alert(
-          'Item already in cart',
-          'Do you want to add another one?',
-          [
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            {
-              text: 'OK',
-              onPress: () => {
-                dispatch(actions.fullRemoveFromCart(item));
-                dispatch(actions.addToCart(newItem));
-                utils.showMessage({
-                  message: 'Success',
-                  description: `${item.name} added to cart`,
-                  type: 'success',
-                  icon: 'success',
-                });
-              },
-            },
-          ],
-          {cancelable: false},
-        );
-        return;
-      }
-    };
+  // const onPress = () => {
 
-    if (quantity > 0) {
-      renderAlert();
-      return;
-    }
+  //   const renderAlert = () => {
+  //     if (quantity > 0) {
+  //       Alert.alert(
+  //         'Item already in cart',
+  //         'Do you want to add another one?',
+  //         [
+  //           {
+  //             text: 'Cancel',
+  //             style: 'cancel',
+  //           },
+  //           {
+  //             text: 'OK',
+  //             onPress: () => {
+  //               dispatch(actions.fullRemoveFromCart(item));
+  //               dispatch(actions.addToCart(newItem));
+  //               utils.showMessage({
+  //                 message: 'Success',
+  //                 description: `${item.name} added to cart`,
+  //                 type: 'success',
+  //                 icon: 'success',
+  //               });
+  //             },
+  //           },
+  //         ],
+  //         { cancelable: false },
+  //       );
+  //       return;
+  //     }
+  //   };
 
-    dispatch(actions.addToCart(newItem));
-    utils.showMessage({
-      message: 'Success',
-      description: `${item.name} added to cart`,
-      type: 'success',
-      icon: 'success',
-    });
-  };
+  //   if (quantity > 0) {
+  //     renderAlert();
+  //     return;
+  //   }
+
+  //   dispatch(actions.addToCart(newItem));
+  //   utils.showMessage({
+  //     message: 'Success',
+  //     description: `${item.name} added to cart`,
+  //     type: 'success',
+  //     icon: 'success',
+  //   });
+
+  // };
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -129,18 +130,18 @@ const Product: React.FC<Props> = ({route}) => {
           bounces={false}
           horizontal={true}
           pagingEnabled={true}
-          style={{marginBottom: 20}}
+          style={{ marginBottom: 20 }}
           alwaysBounceHorizontal={false}
           showsHorizontalScrollIndicator={false}
           onMomentumScrollEnd={updateCurrentSlideIndex}
-          contentContainerStyle={{backgroundColor: theme.colors.lightBlue}}
+          contentContainerStyle={{ backgroundColor: theme.colors.lightBlue }}
         >
           {images.map((item: any, index: any) => {
             return (
               <custom.Image
                 key={index}
-                source={{uri: item}}
-                style={{width: theme.sizes.width, aspectRatio: 1.07}}
+                source={{ uri: item }}
+                style={{ width: theme.sizes.width, aspectRatio: 1.07 }}
                 resizeMode='cover'
               />
             );
@@ -222,7 +223,7 @@ const Product: React.FC<Props> = ({route}) => {
 
   const renderRating = () => {
     return (
-      <View style={{paddingHorizontal: 20, marginBottom: 10}}>
+      <View style={{ paddingHorizontal: 20, marginBottom: 10 }}>
         <product.ProductRating value={reviews.length} item={item} />
       </View>
     );
@@ -239,7 +240,7 @@ const Product: React.FC<Props> = ({route}) => {
           justifyContent: 'space-between',
         }}
       >
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {item.old_price && (
             <Text
               style={{
@@ -271,10 +272,10 @@ const Product: React.FC<Props> = ({route}) => {
 
   const renderSizes = () => {
     return (
-      <View style={{paddingHorizontal: 20, marginBottom: 21}}>
-        <text.H5 style={{marginBottom: 14}}>Size</text.H5>
+      <View style={{ paddingHorizontal: 20, marginBottom: 21 }}>
+        <text.H5 style={{ marginBottom: 14 }}>Size</text.H5>
         <View
-          style={{flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap'}}
+          style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}
         >
           {item?.sizes?.map((item, index, array) => {
             const lastItem = index === array.length - 1;
@@ -327,7 +328,7 @@ const Product: React.FC<Props> = ({route}) => {
             marginBottom: 30,
           }}
         >
-          <text.H5 style={{marginRight: 26}}>Color</text.H5>
+          <text.H5 style={{ marginRight: 26 }}>Color</text.H5>
           <View
             style={{
               flexDirection: 'row',
@@ -368,8 +369,8 @@ const Product: React.FC<Props> = ({route}) => {
 
   const renderDescription = () => {
     return (
-      <View style={{paddingHorizontal: 20, marginBottom: 20}}>
-        <text.H5 style={{marginBottom: 14}}>Description</text.H5>
+      <View style={{ paddingHorizontal: 20, marginBottom: 20 }}>
+        <text.H5 style={{ marginBottom: 14 }}>Description</text.H5>
         <Text
           style={{
             ...theme.fonts.Mulish_Regular,
@@ -386,11 +387,11 @@ const Product: React.FC<Props> = ({route}) => {
 
   const renderButton = () => {
     return (
-      <View style={{paddingHorizontal: 20, marginBottom: 40}}>
+      <View style={{ paddingHorizontal: 20, marginBottom: 40 }}>
         <components.Button
-          title='+ ADd to cart'
-          onPress={() => onPress()}
-          containerStyle={{marginBottom: 14}}
+          title='+ Add to cart'
+          // onPress={() => onPress()}
+          containerStyle={{ marginBottom: 14 }}
         />
       </View>
     );
@@ -399,13 +400,13 @@ const Product: React.FC<Props> = ({route}) => {
   const renderReviews = () => {
     const slice = reviews.slice(0, 3);
     return (
-      <View style={{marginBottom: 20}}>
+      <View style={{ marginBottom: 20 }}>
         <components.BlockHeading
           title={`Reviews (${reviews.length})`}
           onPress={() => {
             navigation.navigate('Reviews');
           }}
-          containerStyle={{marginBottom: 14, paddingHorizontal: 20}}
+          containerStyle={{ marginBottom: 14, paddingHorizontal: 20 }}
         />
         {slice.map((review, index, array) => {
           const lastItem = index === array.length - 1;
@@ -425,7 +426,7 @@ const Product: React.FC<Props> = ({route}) => {
   const renderContent = () => {
     return (
       <ScrollView
-        contentContainerStyle={{flexGrow: 1}}
+        contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
         {renderCarousel()}

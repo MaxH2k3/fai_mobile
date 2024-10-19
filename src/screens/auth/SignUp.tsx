@@ -39,43 +39,45 @@ const SignUp: React.FC = () => {
 
   const renderInputFields = () => {
     return (
-      <View style={{ paddingHorizontal: 20 }}>
-        <custom.InputField
-          label='name'
-          placeholder='Kristin Watson'
-          containerStyle={{
-            marginBottom: 20,
-          }}
-          checkIcon={true}
-        />
-        <custom.InputField
-          label='Email'
-          placeholder='kristinwatson@mail.com'
-          secureTextEntry={true}
-          checkIcon={true}
-          containerStyle={{
-            marginBottom: 20,
-          }}
-        />
-        <custom.InputField
-          label='Password'
-          placeholder='••••••••'
-          secureTextEntry={true}
-          eyeOffIcon={true}
-          containerStyle={{
-            marginBottom: 20,
-          }}
-        />
-        <custom.InputField
-          label='confirm password'
-          placeholder='••••••••'
-          secureTextEntry={true}
-          eyeOffIcon={true}
-          containerStyle={{
-            marginBottom: 20,
-          }}
-        />
-      </View>
+      <>
+        <View style={{ paddingHorizontal: 20 }}>
+          <custom.InputField
+            label='name'
+            placeholder='Kristin Watson'
+            containerStyle={{
+              marginBottom: 20,
+            }}
+            checkIcon={true}
+          />
+          <custom.InputField
+            label='Email'
+            placeholder='kristinwatson@mail.com'
+            secureTextEntry={true}
+            checkIcon={true}
+            containerStyle={{
+              marginBottom: 20,
+            }}
+          />
+          <custom.InputField
+            label='Password'
+            placeholder='••••••••'
+            secureTextEntry={true}
+            eyeOffIcon={true}
+            containerStyle={{
+              marginBottom: 20,
+            }}
+          />
+          <custom.InputField
+            label='confirm password'
+            placeholder='••••••••'
+            secureTextEntry={true}
+            eyeOffIcon={true}
+            containerStyle={{
+              marginBottom: 20,
+            }}
+          />
+        </View>
+      </>
     );
   };
 
@@ -116,24 +118,6 @@ const SignUp: React.FC = () => {
     );
   };
 
-  const renderSocials = () => {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          alignSelf: 'center',
-        }}
-      >
-        <View style={{ paddingHorizontal: 5 }}>
-          <svg.FacebookSvg />
-        </View>
-        <View style={{ paddingHorizontal: 5 }}>
-          <svg.GoogleSvg />
-        </View>
-      </View>
-    );
-  };
 
   const renderContent = () => {
     return (
@@ -144,7 +128,6 @@ const SignUp: React.FC = () => {
         {renderInputFields()}
         {renderButton()}
         {renderIfDontHaveAccount()}
-        {renderSocials()}
       </components.KAScrollView>
     );
   };

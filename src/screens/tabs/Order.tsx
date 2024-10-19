@@ -1,12 +1,14 @@
 import React from 'react';
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 
-import {text} from '../../text';
-import {hooks} from '../../hooks';
-import {custom} from '../../custom';
-import {svg} from '../../assets/svg';
-import {theme} from '../../constants';
-import {components} from '../../components';
+import { text } from '../../text';
+import { hooks } from '../../hooks';
+import { custom } from '../../custom';
+import { svg } from '../../assets/svg';
+import { theme } from '../../constants';
+import { components } from '../../components';
+import { Currency } from '../../constants/enum/currency-enum';
+import formatNumber from '../../utils/format-number';
 
 const Order: React.FC = () => {
   const navigation = hooks.useNavigation();
@@ -56,30 +58,6 @@ const Order: React.FC = () => {
     return null;
   };
 
-  const renderPromocodeApplied = () => {
-    if (cart.length > 0) {
-      return (
-        <View style={{paddingHorizontal: 20, marginBottom: 30}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text
-              style={{
-                ...theme.fonts.Mulish_Regular,
-                fontSize: 16,
-                color: theme.colors.mainColor,
-                lineHeight: 16 * 1.7,
-                marginRight: 8,
-              }}
-            >
-              Promocode applied
-            </Text>
-            <svg.CheckGreenSvg />
-          </View>
-        </View>
-      );
-    }
-
-    return null;
-  };
 
   const renderOrderDetails = () => {
     if (cart.length > 0) {
@@ -95,7 +73,7 @@ const Order: React.FC = () => {
             }}
           >
             <text.H5>Subtotal</text.H5>
-            <text.H5>${total.toFixed(2)}</text.H5>
+            <text.H5>{formatNumber(total)}{Currency.VND}</text.H5>
           </View>
           <View
             style={{
@@ -124,7 +102,7 @@ const Order: React.FC = () => {
                 color: theme.colors.textColor,
               }}
             >
-              -4.29
+              0{Currency.VND}
             </Text>
           </View>
           <View
@@ -175,7 +153,7 @@ const Order: React.FC = () => {
             }}
           >
             <text.H4>Total</text.H4>
-            <text.H4>${(total - 4.29).toFixed(2)}</text.H4>
+            <text.H4>{(formatNumber(total))}{Currency.VND}</text.H4>
           </View>
         </View>
       );
@@ -188,9 +166,9 @@ const Order: React.FC = () => {
     if (cart.length === 0) {
       return (
         <custom.ScrollView
-          contentContainerStyle={{paddingHorizontal: 20, paddingTop: 23}}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 23 }}
         >
-          <View style={{alignSelf: 'center', marginBottom: 20}}>
+          <View style={{ alignSelf: 'center', marginBottom: 20 }}>
             <svg.ShoppingBag />
           </View>
 
@@ -199,7 +177,7 @@ const Order: React.FC = () => {
               marginBottom: 14,
             }}
           />
-          <text.H2 style={{textAlign: 'center', marginBottom: 14}}>
+          <text.H2 style={{ textAlign: 'center', marginBottom: 14 }}>
             Your cart is empty!
           </text.H2>
           <Text
@@ -214,7 +192,7 @@ const Order: React.FC = () => {
           >
             Looks like you haven't made {'\n'} your order yet.
           </Text>
-          <components.Button title='shop now' onPress={() => {}} />
+          <components.Button title='shop now' onPress={() => { }} />
         </custom.ScrollView>
       );
     }
@@ -225,7 +203,7 @@ const Order: React.FC = () => {
   const renderButton = () => {
     if (cart.length > 0) {
       return (
-        <View style={{padding: 20}}>
+        <View style={{ padding: 20 }}>
           <components.Button
             title='proceed to checkout'
             onPress={() => {
@@ -241,9 +219,8 @@ const Order: React.FC = () => {
 
   const renderContent = () => {
     return (
-      <custom.ScrollView contentContainerStyle={{paddingTop: 20}}>
+      <custom.ScrollView contentContainerStyle={{ paddingTop: 20 }}>
         {renderProducts()}
-        {renderPromocodeApplied()}
         {renderOrderDetails()}
         {renderEmptyCart()}
       </custom.ScrollView>

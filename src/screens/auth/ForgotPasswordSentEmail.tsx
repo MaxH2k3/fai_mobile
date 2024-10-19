@@ -1,12 +1,12 @@
-import {View, Text, ScrollView} from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import React from 'react';
 
-import {text} from '../../text';
-import {hooks} from '../../hooks';
-import {custom} from '../../custom';
-import {svg} from '../../assets/svg';
-import {theme} from '../../constants';
-import {components} from '../../components';
+import { text } from '../../text';
+import { hooks } from '../../hooks';
+import { custom } from '../../custom';
+import { svg } from '../../assets/svg';
+import { theme } from '../../constants';
+import { components } from '../../components';
 
 const ForgotPasswordSentEmail: React.FC = () => {
   const navigation = hooks.useNavigation();
@@ -30,12 +30,12 @@ const ForgotPasswordSentEmail: React.FC = () => {
           paddingBottom: 20,
         }}
       >
-        <View style={{alignSelf: 'center', marginBottom: 20}}>
+        <View style={{ alignSelf: 'center', marginBottom: 20 }}>
           <svg.KeySvg />
         </View>
 
-        <components.Line style={{marginBottom: 14}} />
-        <text.H2 style={{textAlign: 'center', marginBottom: 14}}>
+        <components.Line style={{ marginBottom: 14 }} />
+        <text.H2 style={{ textAlign: 'center', marginBottom: 14 }}>
           Your password has{'\n'}been reset!
         </text.H2>
         <Text
@@ -48,8 +48,7 @@ const ForgotPasswordSentEmail: React.FC = () => {
             color: theme.colors.textColor,
           }}
         >
-          Qui ex aute ipsum duis. Incididunt {'\n'} adipisicing voluptate
-          laborum
+          Password changed navigate to the sign in page
         </Text>
         <components.Button
           title='done'

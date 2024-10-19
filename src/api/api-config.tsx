@@ -1,20 +1,6 @@
-import { Token } from "../constants/enum/storage-enum";
-import { getData } from "../utils/storage-utils";
-
 const faiEndPoint = 'https://fashion-ai-innovation.azurewebsites.net/api/v1';
 const cityEndPoint = 'https://provinces.open-api.vn/api'
 const faiAiEndPoint = 'https://fai-ai.azurewebsites.net/api'
-
-export const authApiConfig = () => {
-  const token = getData(Token.JWT_TOKEN);
-  return (
-    {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }
-  )
-}
 
 
 export const createQueryString = (params: Record<string, any>): string => {
@@ -46,6 +32,7 @@ export const forgotPassword = `${faiEndPoint}/authentication/forgot-password`
 // PRODUCT
 export const getAllProduct = `${faiEndPoint}/product`
 export const getProductByName = `${faiEndPoint}/product`
+export const getHighestProductPrice = `${faiEndPoint}/product/highestPrice`
 export const searchProduct = `${faiEndPoint}/product/search`
 export const getProductNames = `${faiEndPoint}/product/name`
 export const createProduct = `${faiEndPoint}/product/create`
@@ -54,7 +41,6 @@ export const getProductRecommend = `${faiEndPoint}/product/recommend`
 export const getProductBestSeller = `${faiEndPoint}/product/mostSold`
 export const getProductTopReview = `${faiEndPoint}/product/topReview`
 export const getSimilarProduct = `${faiEndPoint}/product/similar`
-
 
 
 // PAYMENT
@@ -103,7 +89,7 @@ export const getDistrictInProvince = `${cityEndPoint}/d`
 // ORDER 
 export const getAllOrderCountByBrand = `${faiEndPoint}/order/count`
 export const getAllOrdersByBrand = `${faiEndPoint}/order/name`
-
+export const getOrderDetailById = `${faiEndPoint}/orderDetail`
 
 // AI 
 export const tryOnOutfit = `${faiAiEndPoint}/try-on`

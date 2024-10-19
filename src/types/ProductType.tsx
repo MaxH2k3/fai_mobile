@@ -1,4 +1,4 @@
-import {ReviewType} from './ReviewType';
+import { ReviewType } from './ReviewType';
 
 export type ProductType = {
   id: number;
@@ -21,15 +21,3 @@ export type ProductType = {
   reviews: ReviewType[];
   types: string[];
 };
-
-export type IProductMain = {
-    id: string;
-    name: string;
-    unitPrice: number;
-    purchasePrice: number;
-    status: string;
-    createdAt: string;
-    averageStar: number;
-    image: string;
-    description: string;
-}

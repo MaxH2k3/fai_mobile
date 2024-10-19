@@ -1,18 +1,91 @@
-import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import {
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
 
-import {hooks} from '../hooks';
-import {custom} from '../custom';
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {components} from '../components';
+import { hooks } from '../hooks';
+import { custom } from '../custom';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { components } from '../components';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../types';
+import { IUpdateUserData } from '../constants/model/user-interface';
+import { UpdateUserProfile } from '../api/user-api';
+import { actions } from '../store/actions';
+import { utils } from '../utils';
+import { selectImageFromGallery, takePhotoWithCamera } from '../utils/choose-image';
+import { Asset, ImagePickerResponse } from 'react-native-image-picker';
+import { text } from '../text';
+import EditProfileImage from './EditProfileImage';
 
-const EditProfile: React.FC = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'EditProfile'>;
+
+const EditProfile: React.FC<Props> = ({ route }) => {
+
+  const { user } = route.params;
+
   const navigation = hooks.useNavigation();
+  const dispatch = hooks.useDispatch();
+
+  const [loading, setLoading] = useState(false)
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [firstName, setFirstName] = useState(user.firstName)
+  const [lastName, setLastName] = useState(user.lastName)
+  const [phone, setPhone] = useState(user.phone)
+  const [image, setImage] = useState<any>(null)
+
+  const userHook = hooks.useSelector((state) => state.appState.user);
+
+  const handleUpdateAccount = async () => {
+    setLoading(true)
+    const data: IUpdateUserData = {
+      firstName: firstName,
+      lastName: lastName,
+      // gender: gender,
+      phone: phone,
+      fileAvatar: image as File || undefined
+    }
+    const formData = new FormData();
+    formData.append('LastName', data.lastName as string)
+    formData.append('FirstName', data.firstName as string)
+    // formData.append('Gender', data.gender as string)
+    formData.append('Phone', data.phone as string)
+    formData.append('FileAvatar', data.fileAvatar as File)
+
+    const res = await UpdateUserProfile(formData, userHook!.token)
+    if (res) {
+      console.log(res)
+      setLoading(false)
+      if (res.success) {
+        dispatch(actions.setAccessToken(res.data.data.token))
+        dispatch(actions.setRole(res.data.data.roleName))
+        dispatch(actions.setUserName(res.data.data.lastName + " " + res.data.data.firstName))
+        dispatch(actions.setEmail(res.data.data.email))
+        dispatch(actions.setUser(res.data.data))
+        utils.showMessage({
+          message: 'Update successful',
+          type: 'success',
+          icon: 'success'
+        })
+        navigation.goBack()
+      } else {
+        utils.showMessage({
+          message: 'Update failed',
+          type: 'danger',
+          icon: 'danger'
+        })
+      }
+    }
+  }
+
+  if (loading) {
+    return <components.Loader />;
+  }
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -23,8 +96,9 @@ const EditProfile: React.FC = () => {
   };
 
   const renderLine = () => {
-    return <components.Line style={{marginBottom: 14}} />;
+    return <components.Line style={{ marginBottom: 14 }} />;
   };
+
 
   const renderAvatar = () => {
     const width = responsiveWidth(34);
@@ -40,14 +114,15 @@ const EditProfile: React.FC = () => {
           borderRadius: width / 2,
           borderColor: theme.colors.lightBlue,
         }}
-        onPress={() => {}}
+        onPress={() => setModalVisible(true)}
       >
         <custom.Image
-          source={{uri: 'https://george-fx.github.io/manero/users/01.jpg'}}
-          style={{width: '100%', height: '100%'}}
-          imageStyle={{borderRadius: width / 2}}
+          source={{ uri: image ? image.uri : user.avatar }}
+          style={{ width: '100%', height: '100%' }}
+          imageStyle={{ borderRadius: width / 2 }}
+          resizeMode='cover'
         />
-        <View style={{position: 'absolute', right: -3, bottom: -3}}>
+        <View style={{ position: 'absolute', right: -3, bottom: -3 }}>
           <svg.CameraSvg />
         </View>
       </TouchableOpacity>
@@ -58,24 +133,26 @@ const EditProfile: React.FC = () => {
     return (
       <React.Fragment>
         <custom.InputField
-          label='Name'
-          placeholder='Kristin Watson'
-          containerStyle={{marginBottom: 20}}
+          label='First name'
+          value={firstName}
+          onChangeText={(value) => setFirstName(value)}
+          placeholder={user.firstName}
+          containerStyle={{ marginBottom: 20 }}
         />
         <custom.InputField
-          label='Email'
-          placeholder='kristinwatson@mail.com'
-          containerStyle={{marginBottom: 20}}
+          label='Last name'
+          value={lastName}
+          onChangeText={(value) => setLastName(value)}
+          placeholder={user.lastName}
+          containerStyle={{ marginBottom: 20 }}
         />
         <custom.InputField
           label='Phone number'
-          placeholder='+17 123456789'
-          containerStyle={{marginBottom: 20}}
-        />
-        <custom.InputField
-          label='location'
-          placeholder='Chicago, USA'
-          containerStyle={{marginBottom: 20}}
+          value={phone}
+          onChangeText={(value) => setPhone(value)}
+          placeholder={user.phone}
+          containerStyle={{ marginBottom: 20 }}
+          keyboardType='numeric'
         />
       </React.Fragment>
     );
@@ -85,9 +162,12 @@ const EditProfile: React.FC = () => {
     return (
       <components.Button
         title='save changes'
-        onPress={() => {
-          navigation.goBack();
-        }}
+        onPress={handleUpdateAccount}
+        disabled={
+          firstName == '' ||
+          lastName == '' ||
+          phone == ''
+        }
       />
     );
   };
@@ -100,9 +180,7 @@ const EditProfile: React.FC = () => {
     };
 
     return (
-      <components.KAScrollView
-        contentContainerStyle={{...contentContainerStyle}}
-      >
+      <components.KAScrollView contentContainerStyle={{ ...contentContainerStyle }}>
         {renderLine()}
         {renderAvatar()}
         {renderInputFields()}
@@ -120,6 +198,11 @@ const EditProfile: React.FC = () => {
       {renderStatusBar()}
       {renderHeader()}
       {renderContent()}
+      <EditProfileImage
+        modalVisible={modalVisible}
+        setImage={setImage}
+        setModalVisible={setModalVisible}
+      />
       {renderHomeIndicator()}
     </custom.SmartView>
   );

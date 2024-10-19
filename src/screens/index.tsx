@@ -3,6 +3,7 @@ import Search from './Search';
 import Filter from './Filter';
 import Reviews from './Reviews';
 import Product from './Product';
+import ProductDetail from './ProductDetail';
 import Checkout from './Checkout';
 import SignUp from './auth/SignUp';
 import SignIn from './auth/SignIn';
@@ -29,11 +30,13 @@ import CheckoutShippingDetails from './CheckoutShippingDetails';
 import ForgotPasswordSentEmail from './auth/ForgotPasswordSentEmail';
 
 // Tabs
-import Home from './tabs/Home';
+import Home from './tabs/Home/Home';
 import Order from './tabs/Order';
 import Profile from './tabs/Profile';
 import Wishlist from './tabs/Wishlist';
 import Categories from './tabs/Categories';
+import ProductList from './ProductList';
+import EditPersonalProfile from './EditPersonalProfile';
 
 export const screens = {
   Home,
@@ -46,6 +49,8 @@ export const screens = {
   Reviews,
   Profile,
   Product,
+  ProductDetail,
+  ProductList,
   Wishlist,
   Checkout,
   MyAddress,
@@ -54,6 +59,7 @@ export const screens = {
   AddANewCard,
   OrderFailed,
   EditProfile,
+  EditPersonalProfile,
   NewPassword,
   MyPromocodes,
   OrderHistory,

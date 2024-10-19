@@ -1,23 +1,47 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Accordion from 'react-native-collapsible/Accordion';
 
-import {text} from '../text';
-import {hooks} from '../hooks';
-import {custom} from '../custom';
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {history} from '../constants';
-import {components} from '../components';
+import { text } from '../text';
+import { hooks } from '../hooks';
+import { custom } from '../custom';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { history } from '../constants';
+import { components } from '../components';
+import { useQuery } from '@tanstack/react-query';
+import { useOrderDetail, useOrdersByBrand } from '../api/query/order-query';
+import { IOrder, IOrderDetail } from '../constants/model/order-interface';
+import { truncateText } from '../utils/truncate-text';
+import { formatDate } from '../utils/formar-date';
+import { Currency } from '../constants/enum/currency-enum';
+import formatNumber from '../utils/format-number';
+import OrderDetail from '../components/items/OrderDetail';
 
 const OrderHistory: React.FC = () => {
   const navigation = hooks.useNavigation();
+
+  const user = hooks.useSelector((state) => state.appState.user);
 
   const [activeSections, setActiveSections] = useState<number[]>([]);
 
   const setSections = (sections: any) => {
     setActiveSections(sections.includes(undefined) ? [] : sections);
   };
+
+  const { data, isLoading } = useQuery(
+    useOrdersByBrand({
+      page: 1,
+      eachPage: 100,
+      token: user!.token
+    })
+  );
+
+  const orders: IOrder[] = isLoading ? [] : data?.data.data
+
+  if (isLoading) {
+    return <components.Loader />;
+  }
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -27,7 +51,7 @@ const OrderHistory: React.FC = () => {
     return <components.Header goBack={true} title='Order history' />;
   };
 
-  const accordionHeader = (section: any) => {
+  const accordionHeader = (order: IOrder) => {
     const containerStyle = {
       backgroundColor: theme.colors.white,
       paddingHorizontal: 20,
@@ -40,14 +64,17 @@ const OrderHistory: React.FC = () => {
     };
 
     return (
-      <View style={{...containerStyle}}>
-        <View style={{...theme.flex.row_center_sbt, marginBottom: 7}}>
-          <text.H5>#{section.orderId}</text.H5>
-          {section.status === 'Shipping' && <svg.ShippingSvg />}
-          {section.status === 'Delivered' && <svg.DeliveredSvg />}
-          {section.status === 'Canceled' && <svg.CanceledSvg />}
+      <View style={{ ...containerStyle }}>
+        <View style={{ ...theme.flex.row_center_sbt, marginBottom: 7 }}>
+          <text.H5>{truncateText(order.address, 30)}</text.H5>
+          {order.orderStatusId == 1 && <Text style={{ color: 'orange' }}>Pending</Text>}
+          {order.orderStatusId == 2 && <Text style={{ color: 'blue' }}>Processing</Text>}
+          {order.orderStatusId == 3 && <Text style={{ color: 'purple' }}>Shipping</Text>}
+          {order.orderStatusId == 4 && <Text style={{ color: 'green' }}>Completed</Text>}
+          {order.orderStatusId == 5 && <Text style={{ color: 'red' }}>Canceled</Text>}
         </View>
-        <View style={{...theme.flex.row_center_sbt}}>
+
+        <View style={{ ...theme.flex.row_center_sbt }}>
           <Text
             style={{
               ...theme.fonts.Mulish_Regular,
@@ -56,7 +83,7 @@ const OrderHistory: React.FC = () => {
               lineHeight: 12 * 1.5,
             }}
           >
-            {section.date} at {section.time}
+            {formatDate(order.createdAt)}
           </Text>
           <Text
             style={{
@@ -65,53 +92,16 @@ const OrderHistory: React.FC = () => {
               lineHeight: 12 * 1.5,
             }}
           >
-            ${section.total}
+            {formatNumber(order.totalPrice)}{Currency.VND}
           </Text>
         </View>
       </View>
     );
   };
 
-  const accordionContent = (section: any) => {
-    const containerStyle = {
-      padding: 20,
-      borderBottomWidth: 4,
-      borderBottomColor: theme.colors.lightBlue,
-      backgroundColor: '#F4F7FC',
-    };
-
+  const accordionContent = (order: IOrder) => {
     return (
-      <View style={{...containerStyle}}>
-        <View style={{borderBottomLeftRadius: 10, borderBottomRightRadius: 10}}>
-          {section.products.map((item: any, index: number, array: []) => {
-            return (
-              <View
-                key={item.id}
-                style={{...theme.flex.row_center_sbt, marginBottom: 10}}
-              >
-                <text.T14>{item.name}</text.T14>
-                <text.T14>
-                  {item.quantity} x ${item.price}
-                </text.T14>
-              </View>
-            );
-          })}
-        </View>
-        {section.status === 'Delivered' && (
-          <View style={{...theme.flex.row_center_sbt, marginTop: 24}}>
-            <custom.TouchableOpacity>
-              <svg.RepeatOrderSvg />
-            </custom.TouchableOpacity>
-            <custom.TouchableOpacity
-              onPress={() => {
-                navigation.navigate('LeaveAReviews');
-              }}
-            >
-              <svg.LeaveAReviewSvg />
-            </custom.TouchableOpacity>
-          </View>
-        )}
-      </View>
+      <OrderDetail orderId={order.id} />
     );
   };
 
@@ -119,18 +109,18 @@ const OrderHistory: React.FC = () => {
     if (history.length > 0) {
       return (
         <custom.ScrollView
-          contentContainerStyle={{paddingBottom: 20, flexGrow: 1}}
+          contentContainerStyle={{ paddingBottom: 20, flexGrow: 1 }}
         >
           <Accordion
             activeSections={activeSections}
-            sections={history}
+            sections={orders}
             touchableComponent={TouchableOpacity}
             renderHeader={accordionHeader}
             renderContent={accordionContent}
             duration={400}
             onChange={setSections}
-            containerStyle={{paddingTop: 10}}
-            sectionContainerStyle={{marginBottom: 10}}
+            containerStyle={{ paddingTop: 10 }}
+            sectionContainerStyle={{ marginBottom: 10 }}
           />
         </custom.ScrollView>
       );
@@ -141,7 +131,7 @@ const OrderHistory: React.FC = () => {
     if (history.length === 0) {
       return (
         <custom.ScrollView
-          contentContainerStyle={{flexGrow: 1, paddingTop: 10}}
+          contentContainerStyle={{ flexGrow: 1, paddingTop: 10 }}
           showsVerticalScrollIndicator={false}
         >
           <View
@@ -156,7 +146,7 @@ const OrderHistory: React.FC = () => {
             }}
           >
             <custom.Image
-              source={{uri: 'https://george-fx.github.io/dine-hub/13.jpg'}}
+              source={{ uri: 'https://george-fx.github.io/dine-hub/13.jpg' }}
               style={{
                 width: theme.sizes.width - 100,
                 aspectRatio: 1,
@@ -171,7 +161,7 @@ const OrderHistory: React.FC = () => {
             >
               No Order History Yet!
             </text.H2>
-            <text.T16 style={{textAlign: 'center'}}>
+            <text.T16 style={{ textAlign: 'center' }}>
               It looks like your order history is empty.{'\n'}Place your order
               now to start building{'\n'}your history!
             </text.T16>

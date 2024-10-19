@@ -4,7 +4,7 @@ import {
   addToCart,
   fullRemoveFromCart,
 } from '../slices/cartSlice';
-import { setRefreshToken, setAccessToken, setRole, setUserName } from '../slices/appStateSlice';
+import { setRefreshToken, setAccessToken, setRole, setUserName, setEmail, setUser } from '../slices/appStateSlice';
 import { addToWishlist, removeFromWishlist } from '../slices/wishlistSlice';
 
 export const actions = {
@@ -16,6 +16,8 @@ export const actions = {
   setRefreshToken,
   setRole,
   setUserName,
+  setEmail,
+  setUser,
   fullRemoveFromCart,
   removeFromWishlist,
 };

@@ -33,6 +33,7 @@ import FeaturedItem from './items/FeaturedItem';
 import WishlistItem from './items/WishlistItem';
 import CategoryItem from './items/CategoryItem';
 import PromocodeItem from './items/PromocodeItem';
+import ProductItem from './items/ProductItem';
 
 export const components = {
   Line,
@@ -41,6 +42,7 @@ export const components = {
   Header,
   Button,
   ShopItem,
+  ProductItem,
   OrderItem,
   SaleBadge,
   ReviewItem,

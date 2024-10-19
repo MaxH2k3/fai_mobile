@@ -40,6 +40,8 @@ type Props = {
 };
 
 import { useAppSelector } from '../hooks/selector';
+import { Currency } from '../constants/enum/currency-enum';
+import formatNumber from '../utils/format-number';
 
 const Header: React.FC<Props> = ({
   logo,
@@ -69,7 +71,7 @@ const Header: React.FC<Props> = ({
 
   const cart = hooks.useSelector((state) => state.cartSlice.list);
   // const total = hooks.useSelector((state) => state.cartSlice.total);
-  const total = hooks.useSelector((state) => state.cartSlice.total).toFixed(2);
+  const total = hooks.useSelector((state) => state.cartSlice.total);
   // const total = hooks.useSelector((state) => state.cartSlice.total).toFixed(2);
   // const total = useSelector((state) => state.cartSlice.total);
 
@@ -314,7 +316,7 @@ const Header: React.FC<Props> = ({
                   lineHeight: 10 * 1.5,
                 }}
               >
-                {cart.length > 0 ? `$${total}` : '$0'}
+                {cart.length > 0 ? `${formatNumber(total)}${Currency.VND}` : `0${Currency.VND}`}
               </Text>
             </View>
           </View>

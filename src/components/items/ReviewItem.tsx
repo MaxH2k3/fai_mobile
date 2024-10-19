@@ -1,10 +1,10 @@
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
 
-import {custom} from '../../custom';
-import {product} from '../../product';
-import {ReviewType, ProductType} from '../../types';
-import {theme} from '../../constants';
+import { custom } from '../../custom';
+import { product } from '../../product';
+import { ReviewType, ProductType } from '../../types';
+import { theme } from '../../constants';
 
 type Props = {
   review: ReviewType;
@@ -12,7 +12,7 @@ type Props = {
   lastItem: boolean;
 };
 
-const ReviewItem: React.FC<Props> = ({review, item, lastItem}) => {
+const ReviewItem: React.FC<Props> = ({ review, item, lastItem }) => {
   return (
     <View
       style={{
@@ -26,7 +26,7 @@ const ReviewItem: React.FC<Props> = ({review, item, lastItem}) => {
       }}
     >
       <custom.Image
-        source={{uri: review.image}}
+        source={{ uri: review.image }}
         style={{
           width: 50,
           height: 50,
@@ -36,7 +36,7 @@ const ReviewItem: React.FC<Props> = ({review, item, lastItem}) => {
           borderRadius: 50 / 2,
         }}
       />
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <View
           style={{
             flexDirection: 'row',

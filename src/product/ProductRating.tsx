@@ -1,9 +1,9 @@
-import {View, Text, ViewStyle} from 'react-native';
+import { View, Text, ViewStyle } from 'react-native';
 import React from 'react';
 
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {ProductType} from '../types';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { ProductType } from '../types';
 
 type Props = {
   item: ProductType;
@@ -20,7 +20,7 @@ const ProductRating: React.FC<Props> = ({
 }) => {
   return (
     <View
-      style={{flexDirection: 'row', alignItems: 'center', ...containerStyle}}
+      style={{ flexDirection: 'row', alignItems: 'center', ...containerStyle }}
     >
       <svg.RatingSvg item={item} />
       {item && value && !single && (

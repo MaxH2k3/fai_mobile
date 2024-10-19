@@ -63,9 +63,10 @@ export interface ILoggedInUserData {
     avatar: string;
     roleName: string;
     lastName: string;
-    gender: string;
     firstName: string;
+    gender: string;
     token: string;
+    email: string
 }
 
 export interface IUserProfile {

@@ -1,11 +1,11 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import {createImageProgress} from 'react-native-image-progress';
+import { createImageProgress } from 'react-native-image-progress';
 
 const ImageProgress = createImageProgress(FastImage);
 
 type Props = {
-  source: {uri: string};
+  source: { uri?: string } | number;
   style?: object;
   imageStyle?: object;
   resizeMode?: 'cover' | 'contain' | 'stretch';
@@ -28,8 +28,8 @@ const Image: React.FC<Props> = ({
         resizeMode === 'cover'
           ? FastImage.resizeMode.cover
           : resizeMode === 'contain'
-          ? FastImage.resizeMode.contain
-          : FastImage.resizeMode.stretch
+            ? FastImage.resizeMode.contain
+            : FastImage.resizeMode.stretch
       }
       tintColor={tintColor}
     />

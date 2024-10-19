@@ -5,13 +5,14 @@ import { Stack, hooks } from '../hooks';
 
 const StackNavigator = () => {
   const isFirstTime = hooks.useSelector((state) => state.appState.isFirstTime);
+  const user = hooks.useSelector((state) => state.appState.user);
   const accessToken = hooks.useSelector((state) => state.appState.accessToken);
   const role = hooks.useSelector((state) => state.appState.role)
   const userName = hooks.useSelector((state) => state.appState.userName)
 
   return (
     <Stack.Navigator>
-      {isFirstTime && !accessToken && (
+      {isFirstTime && !user?.token && (
         <Stack.Group>
           <Stack.Screen
             name='Onboarding'
@@ -20,7 +21,7 @@ const StackNavigator = () => {
           />
         </Stack.Group>
       )}
-      {!isFirstTime && !accessToken && (
+      {!isFirstTime && !user?.token && (
         <Stack.Group>
           <Stack.Screen
             name='SignIn'
@@ -64,7 +65,7 @@ const StackNavigator = () => {
           />
         </Stack.Group>
       )}
-      {!isFirstTime && accessToken && (
+      {!isFirstTime && user?.token && (
         <Stack.Group>
           <Stack.Screen
             name='TabNavigator'
@@ -102,8 +103,23 @@ const StackNavigator = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
+            name='ProductDetail'
+            component={screens.ProductDetail}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='ProductList'
+            component={screens.ProductList}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name='EditProfile'
             component={screens.EditProfile}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='EditPersonalProfile'
+            component={screens.EditPersonalProfile}
             options={{ headerShown: false }}
           />
           <Stack.Screen

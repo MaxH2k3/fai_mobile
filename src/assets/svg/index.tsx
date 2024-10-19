@@ -70,6 +70,8 @@ import OrderTabSvg from './tabs/OrderTabSvg';
 import ProfileTabSvg from './tabs/ProfileTabSvg';
 import WishlistTabSvg from './tabs/WishlistTabSvg';
 import CategoriesTabSvg from './tabs/CategoriesTabSvg';
+import RatingStarSvg from './RatingStarSvg';
+import PenSvg from './PenSvg';
 
 export const svg = {
   BagSvg,
@@ -95,6 +97,8 @@ export const svg = {
   SearchSvg,
   GoBackSvg,
   RatingSvg,
+  PenSvg,
+  RatingStarSvg,
   GoogleSvg,
   LogOutSvg,
   MapPinSvg,

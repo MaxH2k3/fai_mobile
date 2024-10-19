@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Svg, {Ellipse, Mask, G, Path, Circle} from 'react-native-svg';
+import Svg, { Ellipse, Mask, G, Path, Circle } from 'react-native-svg';
 
 const UserSvg: React.FC = () => {
   return (
@@ -12,9 +12,9 @@ const UserSvg: React.FC = () => {
         x={13}
         y={13}
         maskUnits='userSpaceOnUse'
-        // style={{
-        //   maskType: 'alpha',
-        // }}
+      // style={{
+      //   maskType: 'alpha',
+      // }}
       >
         <Ellipse cx={100} cy={100.5} fill='#DBE3F5' rx={87} ry={87.5} />
       </Mask>

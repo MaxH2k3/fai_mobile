@@ -1,5 +1,7 @@
-import {ProductType} from './ProductType';
-import {ReviewType} from './ReviewType';
+import { IProductMain } from '../constants/model/product-interface';
+import { IUserProfile } from '../constants/model/user-interface';
+import { ProductType } from './ProductType';
+import { ReviewType } from './ReviewType';
 
 export type RootStackParamList = {
   FAQ: undefined;
@@ -11,7 +13,12 @@ export type RootStackParamList = {
   Checkout: undefined;
   MyAddress: undefined;
   Onboarding: undefined;
-  EditProfile: undefined;
+  EditProfile: {
+    user: IUserProfile
+  };
+  EditPersonalProfile: {
+    user: IUserProfile
+  };
   NewPassword: undefined;
   OrderFailed: undefined;
   AddANewCard: undefined;
@@ -27,13 +34,25 @@ export type RootStackParamList = {
   AddANewAddress: undefined;
   OrderSuccessful: undefined;
   ConfirmationCode: undefined;
-  Product: {item: ProductType};
+  Product: {
+    item: ProductType
+  };
+  ProductDetail: {
+    name: string;
+  }
+  ProductList: {
+    title: string
+    products: IProductMain[]
+  }
   MyPromocodesEmpty: undefined;
   SignUpAccountCreated: undefined;
   CheckoutPaymentMethod: undefined;
   VerifyYourPhoneNumber: undefined;
-  Description: {description: string};
+  Description: { description: string };
   ForgotPasswordSentEmail: undefined;
   CheckoutShippingDetails: undefined;
-  Shop: {title: string; products: ProductType[]};
+  Shop: {
+    title: string;
+    products: ProductType[]
+  };
 };
