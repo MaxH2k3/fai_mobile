@@ -9,7 +9,9 @@ export type RootStackParamList = {
   SignIn: undefined;
   SignUp: undefined;
   Search: undefined;
-  Reviews: undefined;
+  Reviews: {
+    productId: string;
+  };
   Checkout: undefined;
   MyAddress: undefined;
   Onboarding: undefined;

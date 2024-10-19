@@ -32,7 +32,7 @@ const ShopItem: React.FC<Props> = ({ item, lastItem }) => {
         resizeMode='cover'
       >
         <SaleBadge item={item} />
-        <product.ProductInWishlist
+        {/* <product.ProductInWishlist
           item={item}
           containerStyle={{
             position: 'absolute',
@@ -49,7 +49,7 @@ const ShopItem: React.FC<Props> = ({ item, lastItem }) => {
             right: 0,
             top: 40,
           }}
-        />
+        /> */}
       </custom.ImageBackground>
       <product.ProductRating item={item} containerStyle={{ marginBottom: 4 }} />
       <product.ProductName item={item} />

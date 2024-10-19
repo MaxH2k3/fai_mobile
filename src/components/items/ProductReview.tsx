@@ -36,7 +36,7 @@ const ProductReview: React.FC<Prop> = ({ productId }) => {
         <components.BlockHeading
           title={`Reviews (${reviews.length})`}
           onPress={() => {
-            navigation.navigate('Reviews');
+            navigation.navigate('Reviews', { productId: productId });
           }}
           containerStyle={{ marginBottom: 14, paddingHorizontal: 20 }}
         />

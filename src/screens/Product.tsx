@@ -403,9 +403,9 @@ const Product: React.FC<Props> = ({ route }) => {
       <View style={{ marginBottom: 20 }}>
         <components.BlockHeading
           title={`Reviews (${reviews.length})`}
-          onPress={() => {
-            navigation.navigate('Reviews');
-          }}
+          // onPress={() => {
+          //   navigation.navigate('Reviews', { productId: item. });
+          // }}
           containerStyle={{ marginBottom: 14, paddingHorizontal: 20 }}
         />
         {slice.map((review, index, array) => {
