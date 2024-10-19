@@ -368,15 +368,39 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
 
   const renderButton = () => {
     return (
-      <View style={{ paddingHorizontal: 20, marginBottom: 40 }}>
-        <components.Button
-          title='+ ADd to cart'
-          onPress={() => onPress()}
-          containerStyle={{ marginBottom: 14 }}
-        />
-      </View>
+      <>
+        <View style={{ paddingHorizontal: 20, marginBottom: 40, display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <components.Button
+            title='+ ADd to cart'
+            onPress={() => onPress()}
+            containerStyle={{ marginBottom: 14 }}
+          />
+          <components.Button
+            title='+ ADd to wishlist'
+            onPress={onAddToWishlist}
+            containerStyle={{ marginBottom: 14 }}
+          />
+        </View>
+      </>
     );
   };
+
+  const onAddToWishlist = () => {
+    dispatch(actions.addToWishlist({
+      id: product.id,
+      image: product.images[0].image,
+      name: product.name,
+      purchasePrice: product.purchasePrice,
+      unitPrice: product.unitPrice,
+      rating: product.statistic.averageStar
+    }))
+    utils.showMessage({
+      message: 'Success',
+      description: `${product.name} added to wishlist`,
+      type: 'success',
+      icon: 'success',
+    });
+  }
 
   const onPress = () => {
     const renderAlert = () => {

@@ -13,8 +13,6 @@ import { ILoggedInUserData, IUserProfile } from '../../constants/model/user-inte
 import { useQuery } from '@tanstack/react-query';
 import { useUserProfile } from '../../api/query/user-query';
 
-
-
 const Profile: React.FC = () => {
   const dispatch = hooks.useDispatch();
   const navigation = hooks.useNavigation();

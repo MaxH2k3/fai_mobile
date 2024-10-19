@@ -1,11 +1,12 @@
 import React from 'react';
-import {View, Text, FlatList} from 'react-native';
+import { View, Text, FlatList } from 'react-native';
 
-import {hooks} from '../../hooks';
-import {custom} from '../../custom';
-import {components} from '../../components';
+import { hooks } from '../../hooks';
+import { custom } from '../../custom';
+import { components } from '../../components';
 
 const Wishlist: React.FC = () => {
+
   const wishlist = hooks.useSelector((state) => state.wishlistSlice.list);
 
   const renderStatusBar = () => {
@@ -27,7 +28,7 @@ const Wishlist: React.FC = () => {
             paddingTop: 20,
           }}
           showsVerticalScrollIndicator={false}
-          renderItem={({item}) => {
+          renderItem={({ item }) => {
             return <components.WishlistItem item={item} />;
           }}
         />

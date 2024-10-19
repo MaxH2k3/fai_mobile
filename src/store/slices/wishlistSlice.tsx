@@ -1,10 +1,10 @@
-import {createSlice} from '@reduxjs/toolkit';
-import type {PayloadAction} from '@reduxjs/toolkit';
-import type {RootState} from '../store';
-import type {ProductType} from '../../types';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { ProductType } from '../../types';
+import { ICartItem, IWishlistItem } from '../../constants/model/cart-interface';
 
 type WishlistState = {
-  list: ProductType[];
+  list: IWishlistItem[];
 };
 
 const initialState: WishlistState = {
@@ -15,7 +15,7 @@ export const wishlistSlice = createSlice({
   name: 'wishlist',
   initialState,
   reducers: {
-    addToWishlist: (state, action: PayloadAction<ProductType>) => {
+    addToWishlist: (state, action: PayloadAction<IWishlistItem>) => {
       const inWishlist = state.list.find(
         (item) => item.id === action.payload.id,
       );
@@ -26,7 +26,7 @@ export const wishlistSlice = createSlice({
         });
       }
     },
-    removeFromWishlist: (state, action: PayloadAction<ProductType>) => {
+    removeFromWishlist: (state, action: PayloadAction<IWishlistItem>) => {
       const inWishlist = state.list.find(
         (item) => item.id === action.payload.id,
       );
@@ -38,4 +38,4 @@ export const wishlistSlice = createSlice({
   },
 });
 
-export const {addToWishlist, removeFromWishlist} = wishlistSlice.actions;
+export const { addToWishlist, removeFromWishlist } = wishlistSlice.actions;

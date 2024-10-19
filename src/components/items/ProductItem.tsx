@@ -57,8 +57,15 @@ const ProductItem: React.FC<Props> = ({ item, lastItem }) => {
             </Text>
           </View>
         )}
-        {/* <product.ProductInWishlist
-          item={item}
+        <product.ProductInWishlist
+          item={{
+            id: item.id,
+            image: item.image,
+            name: item.name,
+            purchasePrice: item.purchasePrice,
+            unitPrice: item.unitPrice,
+            rating: item.averageStar
+          }}
           containerStyle={{
             position: 'absolute',
             padding: 10,
@@ -67,14 +74,20 @@ const ProductItem: React.FC<Props> = ({ item, lastItem }) => {
           }}
         />
         <product.ProductInCart
-          item={item}
+          item={{
+            id: item.id,
+            image: item.image,
+            name: item.name,
+            price: item.purchasePrice,
+            quantity: 0
+          }}
           containerStyle={{
             position: 'absolute',
             padding: 10,
             right: 0,
             top: 40,
           }}
-        /> */}
+        />
       </custom.ImageBackground>
 
       {/* Rating of the product */}

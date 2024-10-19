@@ -1,15 +1,16 @@
-import React, {PropsWithChildren} from 'react';
-import {TouchableOpacity, Alert} from 'react-native';
+import React, { PropsWithChildren } from 'react';
+import { TouchableOpacity, Alert } from 'react-native';
 
-import {hooks} from '../hooks';
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {ProductType} from '../types';
-import {actions} from '../store/actions';
+import { hooks } from '../hooks';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { ProductType } from '../types';
+import { actions } from '../store/actions';
+import { IWishlistItem } from '../constants/model/cart-interface';
 
 type Props = PropsWithChildren<{
   version?: number;
-  item: ProductType;
+  item: IWishlistItem;
   containerStyle?: object;
 }>;
 
@@ -21,7 +22,7 @@ const ProductInWishlist: React.FC<Props> = ({
   const dispatch = hooks.useDispatch();
 
   const wishlist = hooks.useSelector((state) => state.wishlistSlice.list);
-  const itemExist = (item: ProductType) =>
+  const itemExist = (item: IWishlistItem) =>
     wishlist.find((i) => i.id === item.id);
 
   const fillColor = itemExist(item) ? '#FA5555' : theme.colors.transparent;
