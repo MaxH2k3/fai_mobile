@@ -57,4 +57,5 @@ export type RootStackParamList = {
     title: string;
     products: ProductType[]
   };
+  ChatBot: undefined;
 };

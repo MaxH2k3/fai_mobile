@@ -60,5 +60,5 @@ export const components = {
   BestSellerItem,
   PaymentMenuItem,
   ProfileCategory,
-  ContactsCategory,
+  ContactsCategory
 };

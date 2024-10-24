@@ -72,6 +72,7 @@ import WishlistTabSvg from './tabs/WishlistTabSvg';
 import CategoriesTabSvg from './tabs/CategoriesTabSvg';
 import RatingStarSvg from './RatingStarSvg';
 import PenSvg from './PenSvg';
+import SendSvg from './SendSvg';
 
 export const svg = {
   BagSvg,
@@ -146,4 +147,5 @@ export const svg = {
   AddANewAddressSvg,
   RigthArrowBlackSvg,
   BriefcaseAddressSvg,
+  SendSvg
 };
