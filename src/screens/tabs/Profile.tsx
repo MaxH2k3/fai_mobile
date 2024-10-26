@@ -53,7 +53,7 @@ const Profile: React.FC = () => {
 
     return (
       <View style={{ marginBottom: 20 }}>
-        <components.Line style={{ marginBottom: 20 }} />
+        {/* <components.Line style={{ marginBottom: 20 }} /> */}
         <TouchableOpacity
           style={{
             width: width,

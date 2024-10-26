@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   TextInput,
@@ -22,6 +22,7 @@ type Message = {
 const ChatComponent: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
+  const flatListRef = useRef<FlatList>(null); // Reference to the FlatList
 
   const sendMessage = () => {
     if (input.trim()) {
@@ -42,12 +43,16 @@ const ChatComponent: React.FC = () => {
           sender: 'bot',
         };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
+        flatListRef.current?.scrollToEnd({ animated: true });
       }, 1000); // Simulates delay in bot response
+
+
     }
   };
 
   const renderMessage = ({ item }: { item: Message }) => {
     const isUser = item.sender === 'user';
+    flatListRef.current?.scrollToEnd({ animated: true });
     return (
       <View
         style={[
@@ -68,11 +73,12 @@ const ChatComponent: React.FC = () => {
     >
       {/* Messages List */}
       <FlatList
+        ref={flatListRef}
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={renderMessage}
         contentContainerStyle={styles.chatList}
-        inverted={true} // To keep the latest message at the bottom
+        inverted={false} // To keep the latest message at the bottom
       />
 
       {/* Input Field and Send Button */}
@@ -85,7 +91,6 @@ const ChatComponent: React.FC = () => {
           placeholderTextColor="#A7AFB7"
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-          {/* <svg.SendSvg /> */}
           <Text>Send</Text>
         </TouchableOpacity>
       </View>
