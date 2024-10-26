@@ -8,6 +8,7 @@ import InputFieldBig from '../custom/InputFieldBig';
 import HomeIndicator from '../custom/HomeIndicator';
 import ImageBackground from '../custom/ImageBackground';
 import TouchableOpacity from '../custom/TouchableOpacity';
+import SelectField from './SelectField';
 
 export const custom = {
   Image,
@@ -20,4 +21,5 @@ export const custom = {
   HomeIndicator,
   ImageBackground,
   TouchableOpacity,
+  SelectField
 };

@@ -9,6 +9,8 @@ import { custom } from '../../custom';
 import { svg } from '../../assets/svg';
 import { theme } from '../../constants';
 import { components } from '../../components';
+import Select from '../../custom/SelectField';
+import SelectField from '../../custom/SelectField';
 
 const SignUp: React.FC = () => {
   const navigation = hooks.useNavigation();
@@ -38,6 +40,15 @@ const SignUp: React.FC = () => {
   };
 
   const renderInputFields = () => {
+    const options = [
+      { label: 'Male', value: 'Male' },
+      { label: 'Female', value: 'Female' }
+    ];
+
+    const handleValueChange = (value: any) => {
+      console.log('Selected Value:', value);
+    };
+
     return (
       <>
         <View style={{ paddingHorizontal: 20 }}>
@@ -57,6 +68,12 @@ const SignUp: React.FC = () => {
             containerStyle={{
               marginBottom: 20,
             }}
+          />
+          <custom.SelectField
+            label="Gender"
+            placeholder="Select a gender"
+            data={options}
+            onValueChange={handleValueChange}
           />
           <custom.InputField
             label='Password'

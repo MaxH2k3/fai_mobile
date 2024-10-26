@@ -130,6 +130,15 @@ const EditProfile: React.FC<Props> = ({ route }) => {
   };
 
   const renderInputFields = () => {
+    const options = [
+      { label: 'Male', value: 'Male' },
+      { label: 'Female', value: 'Female' }
+    ];
+
+    const handleValueChange = (value: any) => {
+      console.log('Selected Value:', value);
+    };
+
     return (
       <React.Fragment>
         <custom.InputField
@@ -145,6 +154,12 @@ const EditProfile: React.FC<Props> = ({ route }) => {
           onChangeText={(value) => setLastName(value)}
           placeholder={user.lastName}
           containerStyle={{ marginBottom: 20 }}
+        />
+        <custom.SelectField
+          label="Gender"
+          placeholder="Select a gender"
+          data={options}
+          onValueChange={handleValueChange}
         />
         <custom.InputField
           label='Phone number'

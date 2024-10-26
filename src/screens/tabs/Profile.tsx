@@ -113,13 +113,20 @@ const Profile: React.FC = () => {
             navigation.navigate('OrderHistory');
           }}
         />
-        {/* <components.ProfileCategory
-          title='Payment method'
+        <components.ProfileCategory
+          title='Chat'
+          icon={<svg.CardSvg />}
+          onPress={() => {
+            navigation.navigate('ChatBot');
+          }}
+        />
+        <components.ProfileCategory
+          title='Try on'
           icon={<svg.CardSvg />}
           onPress={() => {
             navigation.navigate('PaymentMethod');
           }}
-        /> */}
+        />
         {/* <components.ProfileCategory
           title='My address'
           icon={<svg.MapPinSvg />}
