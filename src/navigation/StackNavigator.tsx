@@ -182,6 +182,11 @@ const StackNavigator = () => {
             component={screens.CheckoutPaymentMethod}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name='ChatBot'
+            component={screens.ChatBot}
+            options={{ headerShown: false }}
+          />
         </Stack.Group>
       )}
     </Stack.Navigator>

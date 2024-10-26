@@ -61,6 +61,7 @@ const ChatComponent: React.FC = () => {
   };
 
   return (
+
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -84,7 +85,8 @@ const ChatComponent: React.FC = () => {
           placeholderTextColor="#A7AFB7"
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-          <svg.SendSvg /> {/* Assuming you have a Send icon in your svg assets */}
+          {/* <svg.SendSvg /> */}
+          <Text>Send</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
