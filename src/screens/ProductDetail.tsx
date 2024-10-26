@@ -19,12 +19,15 @@ import { IProduct } from '../constants/model/product-interface';
 import { svg } from '../assets/svg';
 import { Currency } from '../constants/enum/currency-enum';
 import ProductReview from '../components/items/ProductReview';
+import formatNumber from '../utils/format-number';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductDetail'>;
 
 const ProductDetail: React.FC<Props> = ({ route }) => {
 
   const dispatch = hooks.useDispatch();
+
+  const navigation = hooks.useNavigation();
 
   const { name } = route.params
 
@@ -191,7 +194,7 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
                 fontSize: 16,
               }}
             >
-              {product.unitPrice}{Currency.VND}
+              {formatNumber(product.unitPrice)}{Currency.VND}
             </Text>
           )}
           <Text
@@ -201,7 +204,7 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
               color: theme.colors.mainColor,
             }}
           >
-            {product.purchasePrice}{Currency.VND}
+            {formatNumber(product.purchasePrice)}{Currency.VND}
           </Text>
         </View>
 
@@ -275,6 +278,7 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
                       // ? theme.colors.lightBlue :
                       theme.colors.transparent,
                   }}
+                  onPress={() => navigation.navigate('LeaveAReviews')}
                 // onPress={() => setSelectedSize(item)}
                 >
                   <Text
@@ -327,7 +331,7 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
                     marginRight: lastElement ? 0 : 7,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: `#${item}`,
+                    backgroundColor: `${item}`,
                     borderWidth: 4,
                     borderColor:
                       // selectedColor === item

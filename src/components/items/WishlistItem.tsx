@@ -9,6 +9,7 @@ import { ProductType } from '../../types';
 import { ICartItem, IWishlistItem } from '../../constants/model/cart-interface';
 import { Currency } from '../../constants/enum/currency-enum';
 import { svg } from '../../assets/svg';
+import { truncateText } from '../../utils/truncate-text';
 
 type Props = {
   item: IWishlistItem;
@@ -46,7 +47,7 @@ const WishlistItem: React.FC<Props> = ({ item }) => {
             }}
             numberOfLines={1}
           >
-            {item.name}
+            {truncateText(item.name, 32)}
           </Text>
           <View
             style={{

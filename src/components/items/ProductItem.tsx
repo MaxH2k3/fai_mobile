@@ -13,6 +13,7 @@ import { IProductMain } from '../../constants/model/product-interface';
 import { svg } from '../../assets/svg';
 import { theme } from '../../constants';
 import { Currency } from '../../constants/enum/currency-enum';
+import formatNumber from '../../utils/format-number';
 
 type Props = { item: IProductMain; lastItem: boolean };
 
@@ -129,7 +130,7 @@ const ProductItem: React.FC<Props> = ({ item, lastItem }) => {
               lineHeight: 12 * 1.5,
             }}
           >
-            {item.unitPrice}{Currency.VND}
+            {formatNumber(item.unitPrice)}{Currency.VND}
           </Text>
         )}
         <Text
@@ -141,7 +142,7 @@ const ProductItem: React.FC<Props> = ({ item, lastItem }) => {
           }}
           numberOfLines={1}
         >
-          {item.purchasePrice}{Currency.VND}
+          {formatNumber(item.purchasePrice)}{Currency.VND}
         </Text>
       </View>
 

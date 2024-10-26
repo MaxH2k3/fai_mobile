@@ -1,6 +1,6 @@
 import axios from "axios";
-import { authApiConfig, createFeedback, getFeedbackByProduct } from "./api-config";
-import { ICreateFeedbackData } from "@/shared/model/feedback-interface";
+import { createFeedback, getFeedbackByProduct } from "./api-config";
+import { ICreateFeedbackData } from "../constants/model/feedback-interface";
 
 export const GetFeedbacksByProduct = async ({
     productId,
@@ -45,13 +45,7 @@ export const GetFeedbacksByProduct = async ({
     }
 }
 
-export const CreateFeedback = async (data: ICreateFeedbackData) => {
-
-    const config = authApiConfig();
-
-    if (!config) {
-        return;
-    }
+export const CreateFeedback = async (data: ICreateFeedbackData, token: string) => {
 
     try {
         const response = await axios.post(createFeedback,
@@ -60,7 +54,11 @@ export const CreateFeedback = async (data: ICreateFeedbackData) => {
                 content: data.content,
                 rating: data.rating
             },
-            config);
+            {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
         return {
             success: true,
             status: response.status,
