@@ -1,12 +1,12 @@
-import {View, Text, ScrollView} from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import React from 'react';
 
-import {text} from '../text';
-import {hooks} from '../hooks';
-import {custom} from '../custom';
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {components} from '../components';
+import { text } from '../text';
+import { hooks } from '../hooks';
+import { custom } from '../custom';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { components } from '../components';
 
 const OrderFailed: React.FC = () => {
   const navigation = hooks.useNavigation();
@@ -30,12 +30,12 @@ const OrderFailed: React.FC = () => {
           paddingBottom: 20,
         }}
       >
-        <View style={{alignSelf: 'center', marginBottom: 20}}>
+        <View style={{ alignSelf: 'center', marginBottom: 20 }}>
           <svg.FailSvg />
         </View>
 
-        <components.Line style={{marginBottom: 14}} />
-        <text.H2 style={{textAlign: 'center', marginBottom: 14}}>
+        <components.Line style={{ marginBottom: 14 }} />
+        <text.H2 style={{ textAlign: 'center', marginBottom: 14 }}>
           Sorry! Your order has failed!
         </text.H2>
         <Text
@@ -52,13 +52,13 @@ const OrderFailed: React.FC = () => {
         </Text>
         <components.Button
           title='try again'
-          onPress={() => {}}
-          containerStyle={{marginBottom: 10}}
+          onPress={() => { navigation.navigate('TabNavigator') }}
+          containerStyle={{ marginBottom: 10 }}
         />
         <components.Button
           title='go to my profile'
           transparent={true}
-          onPress={() => {}}
+          onPress={() => { }}
         />
       </ScrollView>
     );

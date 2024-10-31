@@ -90,6 +90,8 @@ export const getDistrictInProvince = `${cityEndPoint}/d`
 export const getAllOrderCountByBrand = `${faiEndPoint}/order/count`
 export const getAllOrdersByBrand = `${faiEndPoint}/order/name`
 export const getOrderDetailById = `${faiEndPoint}/orderDetail`
+export const changeOrderStatus = `${faiEndPoint}/order/status`
+
 
 // AI 
 export const tryOnOutfit = `${faiAiEndPoint}/try-on`

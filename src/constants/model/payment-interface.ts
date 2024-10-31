@@ -16,6 +16,7 @@ export interface ICheckOutData {
     note: string;
     details: IOrderItem[];
     callbackUrl: string;
+    voucherCode?: string;
 }
 
 export interface IPaymentStorage {

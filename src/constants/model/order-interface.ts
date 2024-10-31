@@ -8,6 +8,7 @@ export interface IOrder {
     orderStatusId: number;
     paymentMethod: PaymentMethod;
     nameReceiver: string;
+    note: string;
     customer: IOrderUser;
     discount: number;
 }
@@ -39,4 +40,10 @@ export interface IOrderDetailUser {
     lastName: string
     firstName: string
     avatar: string
+}
+
+export interface IChangeOrderStatus {
+    orderId: string
+    status: string
+    note: string
 }
