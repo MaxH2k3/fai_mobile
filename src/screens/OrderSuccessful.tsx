@@ -7,9 +7,12 @@ import { custom } from '../custom';
 import { svg } from '../assets/svg';
 import { theme } from '../constants';
 import { components } from '../components';
+import { setScreen } from '../store/slices/tabSlice';
+import { actions } from '../store/actions';
 
 const OrderSuccessful: React.FC = () => {
   const navigation = hooks.useNavigation();
+  const dispatch = hooks.useDispatch();
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -18,6 +21,11 @@ const OrderSuccessful: React.FC = () => {
   const renderHeader = () => {
     return <components.Header logo={true} />;
   };
+
+  const onContinue = () => {
+    dispatch(setScreen('Home'))
+    navigation.navigate('TabNavigator')
+  }
 
   const renderContent = () => {
     return (
@@ -60,7 +68,8 @@ const OrderSuccessful: React.FC = () => {
         <components.Button
           title='Continue Shopping'
           transparent={true}
-          onPress={() => { }}
+
+          onPress={onContinue}
         />
       </ScrollView>
     );

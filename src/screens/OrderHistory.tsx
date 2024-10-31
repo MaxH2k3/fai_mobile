@@ -11,12 +11,15 @@ import { history } from '../constants';
 import { components } from '../components';
 import { useQuery } from '@tanstack/react-query';
 import { useOrderDetail, useOrdersByBrand } from '../api/query/order-query';
-import { IOrder, IOrderDetail } from '../constants/model/order-interface';
+import { IChangeOrderStatus, IOrder, IOrderDetail } from '../constants/model/order-interface';
 import { truncateText } from '../utils/truncate-text';
 import { formatDate } from '../utils/formar-date';
 import { Currency } from '../constants/enum/currency-enum';
 import formatNumber from '../utils/format-number';
 import OrderDetail from '../components/items/OrderDetail';
+import { ChangeOrderStatus } from '../api/order-api';
+import { utils } from '../utils';
+import { Input } from '@rneui/base';
 
 const OrderHistory: React.FC = () => {
   const navigation = hooks.useNavigation();
@@ -24,6 +27,7 @@ const OrderHistory: React.FC = () => {
   const user = hooks.useSelector((state) => state.appState.user);
 
   const [activeSections, setActiveSections] = useState<number[]>([]);
+  const [loading, setLoading] = useState(false)
 
   const setSections = (sections: any) => {
     setActiveSections(sections.includes(undefined) ? [] : sections);
@@ -39,7 +43,33 @@ const OrderHistory: React.FC = () => {
 
   const orders: IOrder[] = isLoading ? [] : data?.data.data
 
-  if (isLoading) {
+  const HandleCancelOrder = async (orderId: string, rejectNote: string) => {
+    setLoading(true)
+    const data: IChangeOrderStatus = {
+      orderId: orderId,
+      note: rejectNote,
+      status: '5'
+    }
+    const res = await ChangeOrderStatus(data, user!.token)
+    if (res) {
+      setLoading(false)
+      if (res.success) {
+        utils.showMessage({
+          message: 'Order cancelled',
+          type: 'success',
+          icon: 'success'
+        })
+      } else {
+        utils.showMessage({
+          message: 'Cancel order failed',
+          type: 'success',
+          icon: 'success'
+        })
+      }
+    }
+  }
+
+  if (isLoading || loading) {
     return <components.Loader />;
   }
 
@@ -96,6 +126,26 @@ const OrderHistory: React.FC = () => {
             {formatNumber(order.totalPrice)}{Currency.VND}
           </Text>
         </View>
+        {order.orderStatusId == 2 && (
+          <>
+            <View style={{ display: 'flex', flexDirection: 'row', gap: 10 }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: 'red',
+                  padding: 5,
+                  marginTop: 10,
+                  borderRadius: 5,
+                  width: 55
+                }}
+                onPress={() => HandleCancelOrder(order.id, order.note)}
+              >
+                <Text style={{ color: 'white', fontWeight: 'bold' }}>
+                  Cancel
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
       </View>
     );
   };

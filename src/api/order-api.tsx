@@ -1,5 +1,6 @@
 import axios from "axios";
-import { getAllOrderCountByBrand, getAllOrdersByBrand, getOrderDetailById } from "./api-config";
+import { changeOrderStatus, getAllOrderCountByBrand, getAllOrdersByBrand, getOrderDetailById } from "./api-config";
+import { IChangeOrderStatus } from "../constants/model/order-interface";
 
 
 export const GetAllOrderCountByBrand = async (brandName: string, token: string) => {
@@ -89,6 +90,42 @@ export const GetOrderDetailById = async (orderId: string, token: string) => {
 
     try {
         const response = await axios.get(`${getOrderDetailById}/${orderId}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return {
+            success: true,
+            status: response.status,
+            data: response.data
+        };
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            return {
+                success: false,
+                status: error.response.status,
+                message: error.response.data.message || 'An error occurred',
+                data: error.response.data
+            };
+        } else {
+            return {
+                success: false,
+                status: 500,
+                message: 'An unexpected error occurred',
+                data: null
+            };
+        }
+    }
+}
+
+export const ChangeOrderStatus = async (data: IChangeOrderStatus, token: string) => {
+
+    try {
+        const response = await axios.patch(`${changeOrderStatus}`, {
+            orderId: data.orderId,
+            status: data.status,
+            note: data.note
+        }, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

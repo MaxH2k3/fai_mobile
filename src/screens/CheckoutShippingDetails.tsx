@@ -1,11 +1,13 @@
-import {Text, Image, View, TouchableOpacity, TextInput} from 'react-native';
-import React, {useState} from 'react';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { Text, Image, View, TouchableOpacity, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-import {custom} from '../custom';
-import {theme} from '../constants';
-import {components} from '../components';
+import { custom } from '../custom';
+import { theme } from '../constants';
+import { components } from '../components';
+import WebView from 'react-native-webview';
+import MapView, { Marker, UrlTile } from 'react-native-maps';
 
 const addresses = [
   {
@@ -34,6 +36,15 @@ const CheckoutShippingDetails: React.FC = () => {
     addresses.length > 0 ? addresses[0].id : null,
   );
 
+  const [region, setRegion] = useState({
+    latitude: 37.7749,    // Default latitude
+    longitude: -122.4194, // Default longitude
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  });
+  const [address, setAddress] = useState('');
+  const [marker, setMarker] = useState(null);
+
   const [currentLocation, setCurrentLocation] = useState(false);
 
   const renderHeader = () => {
@@ -50,16 +61,28 @@ const CheckoutShippingDetails: React.FC = () => {
           borderBottomColor: theme.colors.lightBlue,
         }}
       >
-        <Image
+        {/* <WebView
           source={{
-            uri: 'https://george-fx.github.io/manero/map.jpg',
+            uri: 'https://www.openstreetmap.org/#map=11/18.0806/106.1005',
           }}
-          style={{
-            height: '100%',
-            width: '100%',
-            borderBottomWidth: 1,
+          allowsFullscreenVideo
+          allowFileAccess
+          allowUniversalAccessFromFileURLs
+          originWhitelist={['*']}
+        /> */}
+        <MapView
+          initialRegion={{
+            latitude: 37.7749,    // Example latitude (San Francisco)
+            longitude: -122.4194, // Example longitude (San Francisco)
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}
-        />
+        >
+          <UrlTile
+            urlTemplate="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            maximumZ={19} // Max zoom level supported by OpenStreetMap
+          />
+        </MapView>
       </View>
     );
   };
@@ -90,7 +113,7 @@ const CheckoutShippingDetails: React.FC = () => {
               }}
               onPress={() => setSelectedAddress(item.id)}
             >
-              <View style={{marginTop: 10}}>
+              <View style={{ marginTop: 10 }}>
                 <Text
                   style={{
                     ...theme.fonts.H5,
@@ -139,7 +162,7 @@ const CheckoutShippingDetails: React.FC = () => {
           ) : (
             <TouchableOpacity
               key={index}
-              style={{marginTop: 20, paddingHorizontal: 20}}
+              style={{ marginTop: 20, paddingHorizontal: 20 }}
               onPress={() => setSelectedAddress(item.id)}
             >
               <View
@@ -149,7 +172,7 @@ const CheckoutShippingDetails: React.FC = () => {
                   justifyContent: 'space-between',
                 }}
               >
-                <View style={{width: theme.sizes.width - 40 - 40}}>
+                <View style={{ width: theme.sizes.width - 40 - 40 }}>
                   <custom.InputField
                     placeholder='3646 S 58th Ave, Cicero, IL 608'
                     label='enter an address'
@@ -230,7 +253,7 @@ const CheckoutShippingDetails: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: theme.colors.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }}>
       {renderHeader()}
       {renderMap()}
       {renderContent()}

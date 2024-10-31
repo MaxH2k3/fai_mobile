@@ -240,7 +240,7 @@ const Checkout: React.FC = () => {
         contentContainerStyle={{ flexGrow: 1, paddingTop: 30 }}
       >
         {renderOrderDetails()}
-        {/* {renderShippingDetails()} */}
+        {renderShippingDetails()}
         {renderPaymentMethod()}
         {renderInputFields()}
       </components.KAScrollView>

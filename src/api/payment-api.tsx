@@ -49,6 +49,7 @@ export const CheckOut = async (data: ICheckOutData, token: string) => {
             note: data.note,
             details: data.details,
             callbackUrl: data.callbackUrl,
+            voucher: data.voucherCode
         }, {
             headers: {
                 'Authorization': `Bearer ${token}`
