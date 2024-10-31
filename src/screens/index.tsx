@@ -38,6 +38,8 @@ import Categories from './tabs/Categories';
 import ProductList from './ProductList';
 import EditPersonalProfile from './EditPersonalProfile';
 import ChatBot from './ChatBot';
+import TryingRoom from './TryingRoom';
+import PaymentPage from './PaymentPage';
 
 export const screens = {
   Home,
@@ -77,5 +79,7 @@ export const screens = {
   CheckoutPaymentMethod,
   ForgotPasswordSentEmail,
   CheckoutShippingDetails,
-  ChatBot
+  ChatBot,
+  TryingRoom,
+  PaymentPage
 };

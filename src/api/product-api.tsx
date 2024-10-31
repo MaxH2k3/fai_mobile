@@ -1,5 +1,5 @@
 import axios from "axios";
-import { authApiConfig, createProduct, createQueryString, getAllProduct, getHighestProductPrice, getProductBestSeller, getProductByName, getProductNames, getProductTopReview, getSimilarProduct, searchProduct, searchProductByName } from "./api-config";
+import { createProduct, createQueryString, getAllProduct, getHighestProductPrice, getProductBestSeller, getProductByName, getProductNames, getProductTopReview, getSimilarProduct, searchProduct, searchProductByName } from "./api-config";
 
 export const GetAllProduct = async ({
     page,
@@ -220,13 +220,7 @@ export const GetAllProductName = async () => {
     }
 }
 
-export const CreateProduct = async (data: FormData) => {
-
-    const config = authApiConfig();
-
-    if (!config) {
-        return;
-    }
+export const CreateProduct = async (data: FormData, token: string) => {
 
     try {
         const response = await axios.post(
@@ -234,7 +228,7 @@ export const CreateProduct = async (data: FormData) => {
             data,
             {
                 headers: {
-                    ...config.headers,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });

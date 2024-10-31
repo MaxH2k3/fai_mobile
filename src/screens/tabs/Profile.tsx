@@ -33,6 +33,7 @@ const Profile: React.FC = () => {
     )
   }
 
+
   const renderStatusBar = () => {
     return <custom.StatusBar />;
   };
@@ -120,13 +121,13 @@ const Profile: React.FC = () => {
             navigation.navigate('ChatBot');
           }}
         />
-        <components.ProfileCategory
+        {/* <components.ProfileCategory
           title='Try on'
           icon={<svg.CardSvg />}
           onPress={() => {
             navigation.navigate('PaymentMethod');
           }}
-        />
+        /> */}
         {/* <components.ProfileCategory
           title='My address'
           icon={<svg.MapPinSvg />}

@@ -1,16 +1,16 @@
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useSelector} from 'react-redux';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 // import {showMessage} from 'react-native-flash-message';
-import {showMessage as showMessageRN} from 'react-native-flash-message';
+import { showMessage as showMessageRN } from 'react-native-flash-message';
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
 } from 'react-native-responsive-dimensions';
 
-import {theme} from '../constants';
-import {hooks} from '../hooks';
-import {ProductType, CategoryType} from '../types';
+import { theme } from '../constants';
+import { hooks } from '../hooks';
+import { ProductType, CategoryType } from '../types';
 
 export const responsive = (number: number) => {
   return {
@@ -22,19 +22,19 @@ export const responsive = (number: number) => {
 
 export const homeIndicatorHeight = () => {
   const insets = useSafeAreaInsets();
-  const {bottom} = insets;
+  const { bottom } = insets;
   return bottom;
 };
 
 export const statusBarHeight = () => {
   const insets = useSafeAreaInsets();
-  const {top} = insets;
+  const { top } = insets;
   return top;
 };
 
 export const quantityInCart = (item: ProductType) => {
   const cart = hooks.useSelector((state) => state.cartSlice.list);
-  const ifItemInCart = cart.find((el) => el.id === item.id);
+  const ifItemInCart = cart.find((el) => el.id === item.id.toString());
   const quantity = ifItemInCart ? ifItemInCart.quantity : 0;
   return quantity;
 };
@@ -43,14 +43,14 @@ export const bgColor = (color: string) => {
   return color === 'champagne'
     ? '#F8E7CD'
     : color === 'paleCerulean'
-    ? '#FFA462'
-    : color === 'opal'
-    ? '#67A0A4'
-    : color === 'camel'
-    ? '#6B6D7B'
-    : color === 'squidInk'
-    ? '#142535'
-    : theme.colors.white;
+      ? '#FFA462'
+      : color === 'opal'
+        ? '#67A0A4'
+        : color === 'camel'
+          ? '#6B6D7B'
+          : color === 'squidInk'
+            ? '#142535'
+            : theme.colors.white;
 };
 
 export const updateIndex: any = (e: any, setIndex: any) => {
@@ -67,7 +67,7 @@ export const addedToCartMessage = (item: ProductType) => {
   });
 };
 
-export const showMessage = ({message, description, type, icon}: any) => {
+export const showMessage = ({ message, description, type, icon }: any) => {
   showMessageRN({
     message: message,
     description: description,

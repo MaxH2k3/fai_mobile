@@ -8,7 +8,7 @@ import { RootStackParamList } from '../types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useQuery } from '@tanstack/react-query';
 import { useFeedbacksQuery } from '../api/query/feedback-query';
-import { IFeedback } from '../constants/model/product-interface';
+import { IFeedback, IProductFeedbackResponse } from '../constants/model/product-interface';
 import { svg } from '../assets/svg';
 import { formatDate } from '../utils/formar-date';
 
@@ -27,7 +27,7 @@ const Reviews: React.FC<Props> = ({ route }) => {
     })
   );
 
-  const reviews: IFeedback[] = data?.data.data || []
+  const reviews: IProductFeedbackResponse = data?.data.data || null
 
   if (isLoading) {
     return <components.Loader />;
@@ -44,7 +44,7 @@ const Reviews: React.FC<Props> = ({ route }) => {
   const renderContent = () => {
     return (
       <>
-        {reviews.map((review, index, array) => {
+        {reviews.feedbacks.map((review, index, array) => {
           const lastItem = index === array.length - 1;
           return (
             <View

@@ -1,18 +1,75 @@
-import {View, Text} from 'react-native';
-import React from 'react';
+import { View, Text } from 'react-native';
+import React, { useState } from 'react';
 
-import {text} from '../text';
-import {hooks} from '../hooks';
-import {custom} from '../custom';
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {components} from '../components';
+import { text } from '../text';
+import { hooks } from '../hooks';
+import { custom } from '../custom';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { components } from '../components';
+import formatNumber from '../utils/format-number';
+import { Currency } from '../constants/enum/currency-enum';
+import { IOrderItem, IPaymentData, IPaymentStorage } from '../constants/model/payment-interface';
+import { ICartItem } from '../constants/model/cart-interface';
+import { CreatePayment } from '../api/payment-api';
+import { storeData } from '../utils/storage-utils';
+import { actions } from '../store/actions';
+import { utils } from '../utils';
 
 const Checkout: React.FC = () => {
   const navigation = hooks.useNavigation();
+  const dispatch = hooks.useDispatch();
 
-  const cart = hooks.useSelector((state) => state.cartSlice.list);
+  const cart: ICartItem[] = hooks.useSelector((state) => state.cartSlice.list);
   const total = hooks.useSelector((state) => state.cartSlice.total);
+  const user = hooks.useSelector((state) => state.appState.user);
+
+  const [loading, setLoading] = useState(false)
+  const [note, setNote] = useState('')
+  const [address, setAddress] = useState('')
+  const [isVnPay, setIsVnPay] = useState(true)
+
+  const items: IOrderItem[] = cart.map((item) => ({
+    productId: item.id,
+    quantity: item.quantity,
+    color: item.color,
+    size: item.size
+  }))
+
+  const handleCheckOut = async () => {
+    setLoading(true);
+    const data: IPaymentData = {
+      paymentMethod: isVnPay ? 'VNPAY' : 'PAYOS',
+      description: 'Transaction for FAI',
+      details: items,
+      discount: 0
+    };
+    const res = await CreatePayment(data, user!.token);
+    if (res) {
+      setLoading(false);
+      if (res.success) {
+        const paymentDetail: IPaymentStorage = {
+          address: address,
+          note: note,
+        }
+        dispatch(actions.setPaymentDetail(paymentDetail))
+        navigation.navigate('PaymentPage', {
+          url: res.data.data,
+          method: isVnPay ? 'VNPAY' : 'PAYOS'
+        })
+      } else {
+        utils.showMessage({
+          message: res.message || 'Something went wrong',
+          type: 'danger',
+          icon: 'danger'
+        })
+      }
+    }
+  };
+
+  if (loading) {
+    return <components.Loader />;
+  }
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -26,7 +83,7 @@ const Checkout: React.FC = () => {
 
   const renderOrderDetails = () => {
     return (
-      <View style={{marginBottom: 20}}>
+      <View style={{ marginBottom: 20 }}>
         <View
           style={{
             paddingHorizontal: 20,
@@ -35,7 +92,7 @@ const Checkout: React.FC = () => {
           }}
         >
           <text.H4>My order</text.H4>
-          <text.H4>${(total - 4.29).toFixed(2)}</text.H4>
+          <text.H4>{formatNumber(total)}{Currency.VND}</text.H4>
         </View>
         <View
           style={{
@@ -79,29 +136,7 @@ const Checkout: React.FC = () => {
               </View>
             );
           })}
-          <View style={{...theme.flex.row_center_sbt, marginBottom: 3}}>
-            <Text
-              style={{
-                ...theme.fonts.Mulish_Regular,
-                fontSize: 14,
-                color: theme.colors.textColor,
-                lineHeight: 14 * 1.7,
-              }}
-            >
-              Discount
-            </Text>
-            <Text
-              style={{
-                ...theme.fonts.Mulish_Regular,
-                fontSize: 14,
-                color: theme.colors.textColor,
-                lineHeight: 14 * 1.7,
-              }}
-            >
-              -4.29
-            </Text>
-          </View>
-          <View style={{...theme.flex.row_center_sbt}}>
+          <View style={{ ...theme.flex.row_center_sbt }}>
             <Text
               style={{
                 ...theme.fonts.Mulish_Regular,
@@ -141,7 +176,7 @@ const Checkout: React.FC = () => {
         onPress={() => navigation.navigate('CheckoutShippingDetails')}
       >
         <View>
-          <text.H4 style={{marginBottom: 10}}>Shipping details</text.H4>
+          <text.H4 style={{ marginBottom: 10 }}>Shipping details</text.H4>
           <Text
             style={{
               ...theme.fonts.Mulish_SemiBold,
@@ -169,10 +204,10 @@ const Checkout: React.FC = () => {
           marginBottom: 30,
           borderBottomColor: theme.colors.lightBlue,
         }}
-        onPress={() => navigation.navigate('CheckoutPaymentMethod')}
+        onPress={() => setIsVnPay(!isVnPay)}
       >
         <View>
-          <text.H4 style={{marginBottom: 10}}>Payment method</text.H4>
+          <text.H4 style={{ marginBottom: 10 }}>Payment method</text.H4>
           <Text
             style={{
               ...theme.fonts.Mulish_SemiBold,
@@ -182,7 +217,7 @@ const Checkout: React.FC = () => {
               marginBottom: 10,
             }}
           >
-            7741 ******** 6644
+            {isVnPay ? 'Pay with bank cart' : 'Pay by scanning QR code'}
           </Text>
         </View>
         <svg.RightArrowSvg />
@@ -190,10 +225,11 @@ const Checkout: React.FC = () => {
     );
   };
 
-  const renderInputField = () => {
+  const renderInputFields = () => {
     return (
-      <View style={{paddingHorizontal: 20}}>
-        <custom.InputFieldBig label='comment' />
+      <View style={{ paddingHorizontal: 20, display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <custom.InputFieldBig label='Address' onChange={(value) => setAddress(value)} value={address} placeholder='Enter address' />
+        <custom.InputFieldBig label='Note' onChange={(value) => setNote(value)} value={note} placeholder='Enter note' />
       </View>
     );
   };
@@ -201,24 +237,22 @@ const Checkout: React.FC = () => {
   const renderContent = () => {
     return (
       <components.KAScrollView
-        contentContainerStyle={{flexGrow: 1, paddingTop: 30}}
+        contentContainerStyle={{ flexGrow: 1, paddingTop: 30 }}
       >
         {renderOrderDetails()}
-        {renderShippingDetails()}
+        {/* {renderShippingDetails()} */}
         {renderPaymentMethod()}
-        {renderInputField()}
+        {renderInputFields()}
       </components.KAScrollView>
     );
   };
 
   const renderButton = () => {
     return (
-      <View style={{padding: 20}}>
+      <View style={{ padding: 20 }}>
         <components.Button
           title='Confirm order'
-          onPress={() => {
-            navigation.navigate('OrderSuccessful');
-          }}
+          onPress={handleCheckOut}
         />
       </View>
     );

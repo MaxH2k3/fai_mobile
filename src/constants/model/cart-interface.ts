@@ -1,6 +1,8 @@
 export interface ICartItem {
     id: string;
     name: string,
+    color: string,
+    size: string,
     quantity: number,
     price: number,
     image: string

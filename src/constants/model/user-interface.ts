@@ -23,8 +23,8 @@ export interface IGoogleLoginUserData {
 }
 
 export interface IRegisterUserData {
-    roleId: UserRoleNumber;
-    gender: UserGender;
+    roleName: string;
+    gender: string;
     email: string;
     password: string;
     lastName: string;

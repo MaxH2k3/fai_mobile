@@ -187,6 +187,16 @@ const StackNavigator = () => {
             component={screens.ChatBot}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name='TryingRoom'
+            component={screens.TryingRoom}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name='PaymentPage'
+            component={screens.PaymentPage}
+            options={{ headerShown: false }}
+          />
         </Stack.Group>
       )}
     </Stack.Navigator>

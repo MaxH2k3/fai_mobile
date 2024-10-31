@@ -2,6 +2,7 @@ export interface IPaymentData {
     paymentMethod: string;
     description: string;
     details: IOrderItem[]
+    discount: number
 }
 
 export interface IOrderItem {
@@ -15,4 +16,10 @@ export interface ICheckOutData {
     note: string;
     details: IOrderItem[];
     callbackUrl: string;
+}
+
+export interface IPaymentStorage {
+    address: string
+    note: string
+    voucherCode?: string
 }

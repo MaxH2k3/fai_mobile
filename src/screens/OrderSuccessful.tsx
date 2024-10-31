@@ -1,12 +1,12 @@
-import {View, Text, ScrollView} from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import React from 'react';
 
-import {text} from '../text';
-import {hooks} from '../hooks';
-import {custom} from '../custom';
-import {svg} from '../assets/svg';
-import {theme} from '../constants';
-import {components} from '../components';
+import { text } from '../text';
+import { hooks } from '../hooks';
+import { custom } from '../custom';
+import { svg } from '../assets/svg';
+import { theme } from '../constants';
+import { components } from '../components';
 
 const OrderSuccessful: React.FC = () => {
   const navigation = hooks.useNavigation();
@@ -30,12 +30,12 @@ const OrderSuccessful: React.FC = () => {
           paddingBottom: 20,
         }}
       >
-        <View style={{alignSelf: 'center', marginBottom: 20}}>
+        <View style={{ alignSelf: 'center', marginBottom: 20 }}>
           <svg.SuccessSvg />
         </View>
 
-        <components.Line style={{marginBottom: 14}} />
-        <text.H2 style={{textAlign: 'center', marginBottom: 14}}>
+        <components.Line style={{ marginBottom: 14 }} />
+        <text.H2 style={{ textAlign: 'center', marginBottom: 14 }}>
           Thank you for your order!
         </text.H2>
         <Text
@@ -55,12 +55,12 @@ const OrderSuccessful: React.FC = () => {
           onPress={() => {
             navigation.navigate('OrderHistory');
           }}
-          containerStyle={{marginBottom: 10}}
+          containerStyle={{ marginBottom: 10 }}
         />
         <components.Button
           title='Continue Shopping'
           transparent={true}
-          onPress={() => {}}
+          onPress={() => { }}
         />
       </ScrollView>
     );

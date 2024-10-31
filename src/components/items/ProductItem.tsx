@@ -14,11 +14,15 @@ import { svg } from '../../assets/svg';
 import { theme } from '../../constants';
 import { Currency } from '../../constants/enum/currency-enum';
 import formatNumber from '../../utils/format-number';
+import { addToCart } from '../../store/slices/cartSlice';
+import { showMessage } from 'react-native-flash-message';
 
 type Props = { item: IProductMain; lastItem: boolean };
 
 const ProductItem: React.FC<Props> = ({ item, lastItem }) => {
   const navigation = hooks.useNavigation();
+  const dispatch = hooks.useDispatch();
+
   const blockWidth = responsiveWidth(50) - 20 - 7.5;
   return (
     <TouchableOpacity
@@ -74,21 +78,33 @@ const ProductItem: React.FC<Props> = ({ item, lastItem }) => {
             top: 0,
           }}
         />
-        <product.ProductInCart
-          item={{
-            id: item.id,
-            image: item.image,
-            name: item.name,
-            price: item.purchasePrice,
-            quantity: 0
-          }}
-          containerStyle={{
+        <TouchableOpacity
+          style={{
             position: 'absolute',
             padding: 10,
             right: 0,
             top: 40,
           }}
-        />
+          onPress={() => {
+            dispatch(addToCart({
+              id: item.id,
+              image: item.image,
+              name: item.name,
+              price: item.purchasePrice,
+              quantity: 0,
+              color: item.colors[0],
+              size: item.sizes[0]
+            }));
+            showMessage({
+              message: 'Success',
+              description: `${item.name} added to cart`,
+              type: 'success',
+              icon: 'success',
+            });
+          }}
+        >
+          <svg.BagSmallSvg strokeColor={theme.colors.textColor} />
+        </TouchableOpacity>
       </custom.ImageBackground>
 
       {/* Rating of the product */}

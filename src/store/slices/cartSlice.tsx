@@ -19,19 +19,21 @@ export const cartSlice = createSlice({
       state: StateType = initialState,
       action: PayloadAction<ICartItem>,
     ) => {
-      const inCart = state.list.find((item) => item.id === action.payload.id);
-
+      const inCart = state.list.find(
+        (item) =>
+          item.id === action.payload.id &&
+          item.color === action.payload.color &&
+          item.size === action.payload.size
+      );
       if (inCart) {
-        state.list.map((item: ICartItem) => {
-          if (item.id === action.payload.id) {
+        state.list.map((item) => {
+          if (item.id === action.payload.id && item.color === action.payload.color && item.size === action.payload.size) {
             if (item.quantity) {
               item.quantity += 1;
             }
           }
           return item;
-        }, state);
-        // state.total += action.payload.price;
-        // price string to number
+        });
         state.total += Number(action.payload.price);
       } else {
         state.list.push({
@@ -41,37 +43,48 @@ export const cartSlice = createSlice({
         state.total += Number(action.payload.price);
       }
     },
+
     removeFromCart: (state, action: PayloadAction<ICartItem>) => {
-      const inCart = state.list.find((item) => item.id === action.payload.id);
+      const index = state.list.findIndex(
+        (item) =>
+          item.id === action.payload.id &&
+          item.color === action.payload.color &&
+          item.size === action.payload.size
+      );
 
-      if (inCart) {
-        state.list.map((item) => {
-          if (item.id === action.payload.id && (item.quantity as number) > 1) {
-            if (item.quantity) {
-              item.quantity -= 1;
-            }
-          } else if (item.id === action.payload.id && item.quantity === 1) {
-            state.list.splice(state.list.indexOf(item), 1);
-          }
-          return item;
-        }, state);
-        state.total -= Number(action.payload.price);
+      if (index !== -1) {
+        const item = state.list[index];
+
+        if (item.quantity && item.quantity > 1) {
+          item.quantity -= 1;
+          state.total -= Number(action.payload.price);
+        } else {
+          state.total -= Number(item.price);
+          state.list.splice(index, 1);
+        }
       }
     },
 
-    fullRemoveFromCart: (state, action) => {
-      const inCart = state.list.find((item) => item.id === action.payload.id);
+
+    fullRemoveFromCart: (state, action: PayloadAction<ICartItem>) => {
+      const inCart = state.list.find(
+        (item) =>
+          item.id === action.payload.id &&
+          item.color === action.payload.color &&
+          item.size === action.payload.size
+      );
 
       if (inCart) {
-        state.list.map((item) => {
-          if (item.id === action.payload.id) {
-            state.total -= item.price * (item.quantity as number);
-            state.list.splice(state.list.indexOf(item), 1);
-          }
-          return item;
-        }, state);
+        state.total -= inCart.price * (inCart.quantity || 1);
+        state.list = state.list.filter(
+          (item) =>
+            item.id !== action.payload.id ||
+            item.color !== action.payload.color ||
+            item.size !== action.payload.size
+        );
       }
     },
+
 
     resetCart: (state) => {
       state.list = [];

@@ -1,21 +1,20 @@
-import { ICheckOutData, IPaymentData } from "@/shared/model/payment-interface";
 import axios from "axios";
-import { authApiConfig, checkOut, createPayment } from "./api-config";
+import { ICheckOutData, IPaymentData } from "../constants/model/payment-interface";
+import { checkOut, createPayment } from "./api-config";
 
-export const CreatePayment = async (data: IPaymentData) => {
+export const CreatePayment = async (data: IPaymentData, token: string) => {
 
-    const config = authApiConfig();
-
-    if (!config) {
-        return;
-    }
 
     try {
         const response = await axios.post(createPayment, {
             paymentMethod: data.paymentMethod,
             description: data.description,
             details: data.details,
-        }, config);
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        })
         return {
             success: true,
             status: response.status,
@@ -40,13 +39,8 @@ export const CreatePayment = async (data: IPaymentData) => {
     }
 }
 
-export const CheckOut = async (data: ICheckOutData) => {
+export const CheckOut = async (data: ICheckOutData, token: string) => {
 
-    const config = authApiConfig();
-
-    if (!config) {
-        return;
-    }
 
     try {
         const response = await axios.post(checkOut, {
@@ -55,7 +49,11 @@ export const CheckOut = async (data: ICheckOutData) => {
             note: data.note,
             details: data.details,
             callbackUrl: data.callbackUrl,
-        }, config);
+        }, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        })
         return {
             success: true,
             status: response.status,

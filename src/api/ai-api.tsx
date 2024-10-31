@@ -19,12 +19,13 @@ export const TryOnOutfit = async (data: FormData, token: string) => {
             data: response.data
         };
     } catch (error) {
+        console.log(error)
         if (axios.isAxiosError(error) && error.response) {
             return {
                 success: false,
                 status: error.response.status,
                 message: error.response.data.message || 'An error occurred',
-                data: error.response.data
+                data: error.response
             };
         } else {
             return {

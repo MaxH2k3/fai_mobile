@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
 import { text } from '../text';
 import { hooks } from '../hooks';
 import { utils } from '../utils';
 import { custom } from '../custom';
-import { product } from '../product';
 import { theme } from '../constants';
-import { reviews } from '../constants';
 import { actions } from '../store/actions';
 import { components } from '../components';
 import type { RootStackParamList } from '../types';
-import { queryHooks } from '../store/slices/apiSlice';
 import { useQuery } from '@tanstack/react-query';
 import { useProductQuery } from '../api/query/product-query';
 import { IProduct } from '../constants/model/product-interface';
@@ -20,6 +16,7 @@ import { svg } from '../assets/svg';
 import { Currency } from '../constants/enum/currency-enum';
 import ProductReview from '../components/items/ProductReview';
 import formatNumber from '../utils/format-number';
+import { color } from '@rneui/base';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProductDetail'>;
 
@@ -41,7 +38,17 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
+  const [choosenColor, setChoosenColor] = useState('')
+  const [choosenSize, setChoosenSize] = useState('')
+
   const [quantity, setQuantity] = useState(0)
+
+  useEffect(() => {
+    if (product && !isLoading) {
+      setChoosenColor(product.color[0]);
+      setChoosenSize(product.size[0]);
+    }
+  }, [data, isLoading]);
 
   if (isLoading) {
     return <components.Loader />;
@@ -274,12 +281,11 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
                     alignItems: 'center',
                     borderColor: theme.colors.lightBlue,
                     backgroundColor:
-                      // selectedSize === item
-                      // ? theme.colors.lightBlue :
-                      theme.colors.transparent,
+                      choosenSize === item
+                        ? theme.colors.lightBlue :
+                        theme.colors.transparent,
                   }}
-                  onPress={() => navigation.navigate('LeaveAReviews')}
-                // onPress={() => setSelectedSize(item)}
+                  onPress={() => setChoosenSize(item)}
                 >
                   <Text
                     style={{
@@ -334,13 +340,13 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
                     backgroundColor: `${item}`,
                     borderWidth: 4,
                     borderColor:
-                      // selectedColor === item
-                      // ? theme.colors.lightBlue :
-                      item == 'ffffffff' ?
-                        theme.colors.lightBlue :
-                        theme.colors.white,
+                      choosenColor === item
+                        ? theme.colors.lightBlue :
+                        item == 'ffffffff' ?
+                          theme.colors.lightBlue :
+                          theme.colors.white,
                   }}
-                // onPress={() => setSelectedColor(item)}
+                  onPress={() => setChoosenColor(item)}
                 />
               );
             })}
@@ -372,20 +378,27 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
 
   const renderButton = () => {
     return (
-      <>
-        <View style={{ paddingHorizontal: 20, marginBottom: 40, display: 'flex', flexDirection: 'column', gap: 20 }}>
-          <components.Button
-            title='+ ADd to cart'
-            onPress={() => onPress()}
-            containerStyle={{ marginBottom: 14 }}
-          />
-          <components.Button
-            title='+ ADd to wishlist'
-            onPress={onAddToWishlist}
-            containerStyle={{ marginBottom: 14 }}
-          />
-        </View>
-      </>
+      <View style={{ paddingHorizontal: 20, marginBottom: 40, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <components.Button
+          title='+ Add to cart'
+          onPress={() => onPress()}
+          containerStyle={{ marginBottom: 14 }}
+        />
+        <components.Button
+          title='+ Add to wishlist'
+          onPress={onAddToWishlist}
+          containerStyle={{ marginBottom: 14 }}
+        />
+        <components.Button
+          title='Try out outfit'
+          onPress={() => navigation.navigate('TryingRoom', {
+            PersonInfo: [product.gender],
+            Categories: [product.category.name],
+            ProductImage: product.images[0].image
+          })}
+          containerStyle={{ marginBottom: 14 }}
+        />
+      </View>
     );
   };
 
@@ -420,19 +433,14 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
             {
               text: 'OK',
               onPress: () => {
-                dispatch(actions.fullRemoveFromCart({
-                  id: product.id,
-                  image: product.images[0].image,
-                  name: product.name,
-                  price: product.purchasePrice,
-                  quantity: quantity
-                }));
                 dispatch(actions.addToCart({
                   id: product.id,
                   image: product.images[0].image,
                   name: product.name,
                   price: product.purchasePrice,
-                  quantity: quantity
+                  quantity: quantity,
+                  color: choosenColor,
+                  size: choosenSize
                 }));
                 utils.showMessage({
                   message: 'Success',
@@ -458,7 +466,9 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
       image: product.images[0].image,
       name: product.name,
       price: product.purchasePrice,
-      quantity: quantity
+      quantity: quantity,
+      color: choosenColor,
+      size: choosenSize
     }));
     utils.showMessage({
       message: 'Success',

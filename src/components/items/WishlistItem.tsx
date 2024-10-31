@@ -96,13 +96,6 @@ const WishlistItem: React.FC<Props> = ({ item }) => {
           }}
         >
           <product.ProductInWishlist item={item} version={2} />
-          <product.ProductInCart version={1} item={{
-            id: item.id,
-            image: item.image,
-            name: item.name,
-            price: item.purchasePrice,
-            quantity: 1
-          }} />
         </View>
       </View>
     </TouchableOpacity>

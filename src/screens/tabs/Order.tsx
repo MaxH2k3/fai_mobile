@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-
 import { text } from '../../text';
 import { hooks } from '../../hooks';
 import { custom } from '../../custom';
@@ -9,13 +8,15 @@ import { theme } from '../../constants';
 import { components } from '../../components';
 import { Currency } from '../../constants/enum/currency-enum';
 import formatNumber from '../../utils/format-number';
+import { actions } from '../../store/actions';
+import { setScreen } from '../../store/slices/tabSlice';
 
 const Order: React.FC = () => {
   const navigation = hooks.useNavigation();
 
   const cart = hooks.useSelector((state) => state.cartSlice.list);
   const total = hooks.useSelector((state) => state.cartSlice.total);
-
+  const dispatch = hooks.useDispatch();
   const renderStatusBar = () => {
     return <custom.StatusBar />;
   };
@@ -45,7 +46,7 @@ const Order: React.FC = () => {
             const lastItem = index === array.length - 1;
             return (
               <components.OrderItem
-                key={item.id}
+                key={item.id + ' ' + item.color + ' ' + item.size}
                 item={item}
                 lastItem={lastItem}
               />
@@ -192,7 +193,7 @@ const Order: React.FC = () => {
           >
             Looks like you haven't made {'\n'} your order yet.
           </Text>
-          <components.Button title='shop now' onPress={() => { }} />
+          <components.Button title='shop now' onPress={() => dispatch(setScreen('Home'))} />
         </custom.ScrollView>
       );
     }
@@ -203,11 +204,17 @@ const Order: React.FC = () => {
   const renderButton = () => {
     if (cart.length > 0) {
       return (
-        <View style={{ padding: 20 }}>
+        <View style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <components.Button
             title='proceed to checkout'
             onPress={() => {
               navigation.navigate('Checkout');
+            }}
+          />
+          <components.Button
+            title='Remove all'
+            onPress={() => {
+              dispatch(actions.resetCart());
             }}
           />
         </View>

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ILoggedInUserData } from '../../constants/model/user-interface';
+import { IPaymentStorage } from '../../constants/model/payment-interface';
 
 type AppStateType = {
   isFirstTime: boolean;
@@ -9,6 +10,7 @@ type AppStateType = {
   userName: string | null;
   email: string | null;
   user: ILoggedInUserData | null
+  paymentDetail: IPaymentStorage | null
 };
 
 const initialState: AppStateType = {
@@ -18,7 +20,8 @@ const initialState: AppStateType = {
   role: null,
   userName: null,
   email: null,
-  user: null
+  user: null,
+  paymentDetail: null
 };
 
 const appStateSlice = createSlice({
@@ -46,10 +49,13 @@ const appStateSlice = createSlice({
     setUser: (state, action: PayloadAction<ILoggedInUserData | null>) => {
       state.user = action.payload;
     },
+    setPaymentDetail: (state, action: PayloadAction<IPaymentStorage | null>) => {
+      state.paymentDetail = action.payload;
+    },
   },
 });
 
-export const { setIsFirstTime, setRefreshToken, setAccessToken, setRole, setUserName, setEmail, setUser } =
+export const { setIsFirstTime, setRefreshToken, setAccessToken, setRole, setUserName, setEmail, setUser, setPaymentDetail } =
   appStateSlice.actions;
 
 export { appStateSlice };

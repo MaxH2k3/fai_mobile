@@ -15,12 +15,6 @@ const Categories: React.FC = () => {
   const dispatch = hooks.useDispatch();
 
   const {
-    data: productsData,
-    error: productsError,
-    isLoading: productsLoading,
-  } = queryHooks.useGetProductsQuery();
-
-  const {
     data: tagsData,
     error: tagsError,
     isLoading: tagsLoading,
@@ -33,12 +27,10 @@ const Categories: React.FC = () => {
   } = queryHooks.useGetCategoriesQuery();
 
   const tags = tagsData instanceof Array ? tagsData : [];
-  const products = productsData instanceof Array ? productsData : [];
   const categories = categoriesData instanceof Array ? categoriesData : [];
 
   const allCategories = AllCategories
 
-  const selectedTag = hooks.useSelector((state) => state.tagSlice.tag);
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;

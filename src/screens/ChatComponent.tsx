@@ -11,42 +11,90 @@ import {
 } from 'react-native';
 
 import { theme } from '../constants';
-import { svg } from '../assets/svg';  // Assuming you have SVG icons here
+import { HubConnection } from '@microsoft/signalr';
+import { svg } from '../assets/svg';
+import connectToSignalR from '../utils/signal-r-connect';
+import { hooks } from '../hooks';
+import { utils } from '../utils';
 
 type Message = {
   id: string;
   text: string;
-  sender: 'user' | 'bot'; // 'user' for the person using the app, 'bot' for automated responses (if needed)
+  sender: 'user' | 'bot';
 };
 
 const ChatComponent: React.FC = () => {
+
+  const user = hooks.useSelector((state) => state.appState.user);
+
+  const [loading, setLoading] = useState(false)
+
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState<string>('');
-  const flatListRef = useRef<FlatList>(null); // Reference to the FlatList
+  const [messageToSend, setMessageToSend] = useState<string>('')
+  const [connection, setConnection] = useState<HubConnection | null>(null);
 
-  const sendMessage = () => {
-    if (input.trim()) {
-      const newMessage: Message = {
-        id: Math.random().toString(),
-        text: input,
-        sender: 'user',
-      };
+  const flatListRef = useRef<FlatList>(null);
 
-      setMessages([...messages, newMessage]);
-      setInput('');
-
-      // Optionally, add a bot response or another automated message
-      setTimeout(() => {
+  useEffect(() => {
+    const setupConnection = async () => {
+      const res = await connectToSignalR(user!.token, 'chat');
+      if (res) {
+        res.serverTimeoutInMilliseconds = 1000 * 60000;
+        res.keepAliveIntervalInMilliseconds = 1000 * 10;
+        setConnection(res);
+      }
+      res?.on("SendMessage", (message: string) => {
         const botMessage: Message = {
           id: Math.random().toString(),
-          text: 'This is an automated response!',
+          text: message,
           sender: 'bot',
         };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
-        flatListRef.current?.scrollToEnd({ animated: true });
-      }, 1000); // Simulates delay in bot response
+      });
 
+      return () => {
+        if (connection) {
+          connection.stop().then(() => {
+            console.log("Connection closed.");
+            setConnection(null);
+          }).catch((err) => console.error("Error closing connection:", err));
+        }
+      };
+    };
+    if (!connection && user)
+      setupConnection();
+  }, [connection]);
 
+  const SendMessage = () => {
+    setLoading(true)
+    if (messageToSend.trim()) {
+      const newMessage: Message = {
+        id: Math.random().toString(),
+        text: messageToSend,
+        sender: 'user',
+      };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    }
+    const date = new Date();
+    if (connection) {
+      connection.invoke('ChatBOT', date.toISOString(), `${messageToSend}`)
+        .then(() => {
+          setLoading(false)
+          setMessageToSend('')
+        })
+        .catch((err: any) => {
+          utils.showMessage({
+            message: 'Send message failed',
+            type: 'danger',
+            icon: 'danger'
+          })
+        });
+    } else {
+      utils.showMessage({
+        message: 'Cannot connect to chat right now',
+        type: 'danger',
+        icon: 'danger'
+      })
     }
   };
 
@@ -71,26 +119,24 @@ const ChatComponent: React.FC = () => {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      {/* Messages List */}
       <FlatList
         ref={flatListRef}
         data={messages}
         keyExtractor={(item) => item.id}
         renderItem={renderMessage}
         contentContainerStyle={styles.chatList}
-        inverted={false} // To keep the latest message at the bottom
+        inverted={false}
       />
 
-      {/* Input Field and Send Button */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          value={input}
-          onChangeText={setInput}
+          value={messageToSend}
+          onChangeText={(value) => setMessageToSend(value)}
           placeholder="Type a message..."
           placeholderTextColor="#A7AFB7"
         />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+        <TouchableOpacity style={styles.sendButton} onPress={SendMessage} disabled={loading || messageToSend.trim() == '' || !connection}>
           <Text>Send</Text>
         </TouchableOpacity>
       </View>

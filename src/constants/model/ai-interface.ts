@@ -1,4 +1,4 @@
-interface ITryOnOutfitDate {
+interface ITryOnOutfitData {
     PersonInfo: string[]
     Categories: string[]
     HumanImage: File

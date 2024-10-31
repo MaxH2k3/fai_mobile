@@ -1,12 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-
 import { hooks } from '../../hooks';
 import { custom } from '../../custom';
-import { product } from '../../product';
 import { theme } from '../../constants';
-import { ProductType } from '../../types';
-import SaleBadge from '../badges/SaleBadge';
 import { ICartItem } from '../../constants/model/cart-interface';
 import { Currency } from '../../constants/enum/currency-enum';
 import { svg } from '../../assets/svg';
@@ -75,7 +71,7 @@ const OrderItem: React.FC<Props> = ({ item, lastItem }) => {
           </Text>
         </View>
 
-        {/* <View style={{ marginTop: 'auto' }}>
+        <View style={{ marginTop: 'auto' }}>
           <Text
             style={{
               fontSize: 14,
@@ -97,7 +93,7 @@ const OrderItem: React.FC<Props> = ({ item, lastItem }) => {
           >
             Color: {item.color ? item.color : 'No color'}
           </Text>
-        </View> */}
+        </View>
 
       </View>
     );

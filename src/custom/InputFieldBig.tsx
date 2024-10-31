@@ -1,16 +1,22 @@
-import {View, Text, TextInput} from 'react-native';
-import React from 'react';
+import { View, Text, TextInput } from 'react-native';
+import React, { useState } from 'react';
 
-import {theme} from '../constants';
+import { theme } from '../constants';
 
 type Props = {
   label: string;
   containerStyle?: object;
+  onChange?: (text: string) => void;
+  value: string
+  placeholder?: string
 };
 
 const InputFieldBig: React.FC<Props> = ({
   containerStyle,
   label,
+  onChange,
+  value,
+  placeholder
 }): JSX.Element => {
   return (
     <View
@@ -31,13 +37,14 @@ const InputFieldBig: React.FC<Props> = ({
           paddingTop: 23,
           paddingBottom: 23,
           color: theme.colors.mainColor,
-          // ...theme.fonts.DMSans_400Regular,
           fontSize: 16,
         }}
-        placeholder='Enter your comment'
+        placeholder={placeholder}
         textAlignVertical='top'
         multiline={true}
         placeholderTextColor='#A8BCCC'
+        onChangeText={onChange}
+        value={value}
       />
       {label && (
         <View
@@ -51,7 +58,6 @@ const InputFieldBig: React.FC<Props> = ({
         >
           <Text
             style={{
-              // ...theme.fonts.DMSans_500Medium,
               fontSize: 12,
               textTransform: 'uppercase',
               color: theme.colors.textColor,

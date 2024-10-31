@@ -3,8 +3,9 @@ import {
   removeFromCart,
   addToCart,
   fullRemoveFromCart,
+  resetCart,
 } from '../slices/cartSlice';
-import { setRefreshToken, setAccessToken, setRole, setUserName, setEmail, setUser } from '../slices/appStateSlice';
+import { setRefreshToken, setAccessToken, setRole, setUserName, setEmail, setUser, setPaymentDetail } from '../slices/appStateSlice';
 import { addToWishlist, removeFromWishlist } from '../slices/wishlistSlice';
 
 export const actions = {
@@ -12,6 +13,7 @@ export const actions = {
   addToCart,
   addToWishlist,
   removeFromCart,
+  resetCart,
   setAccessToken,
   setRefreshToken,
   setRole,
@@ -20,4 +22,5 @@ export const actions = {
   setUser,
   fullRemoveFromCart,
   removeFromWishlist,
+  setPaymentDetail
 };

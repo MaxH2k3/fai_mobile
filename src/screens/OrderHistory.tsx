@@ -72,6 +72,7 @@ const OrderHistory: React.FC = () => {
           {order.orderStatusId == 3 && <Text style={{ color: 'purple' }}>Shipping</Text>}
           {order.orderStatusId == 4 && <Text style={{ color: 'green' }}>Completed</Text>}
           {order.orderStatusId == 5 && <Text style={{ color: 'red' }}>Canceled</Text>}
+          {order.orderStatusId == 6 && <Text style={{ color: 'red' }}>Rejected</Text>}
         </View>
 
         <View style={{ ...theme.flex.row_center_sbt }}>

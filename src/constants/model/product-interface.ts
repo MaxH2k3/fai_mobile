@@ -10,6 +10,8 @@ export interface IProductMain {
     createdAt: string;
     averageStar: number;
     image: string;
+    colors: string[];
+    sizes: string[];
     description: string;
 }
 
@@ -108,4 +110,16 @@ export interface ICreateProductData {
     Gender: string;
     TagIds: number[];
     Images: File[]
+}
+
+export interface IProductFeedbackResponse {
+    isBought: boolean
+    userFeedback: IFeedback
+    feedbacks: IFeedback[]
+}
+
+export interface ItryOutImage {
+    uri: string | undefined;
+    name: string | undefined;
+    type: string | undefined;
 }

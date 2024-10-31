@@ -58,4 +58,13 @@ export type RootStackParamList = {
     products: ProductType[]
   };
   ChatBot: undefined;
+  TryingRoom: {
+    PersonInfo: string[];
+    Categories: string[];
+    ProductImage: string;
+  },
+  PaymentPage: {
+    url: string
+    method: string
+  }
 };

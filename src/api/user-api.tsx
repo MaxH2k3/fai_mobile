@@ -69,7 +69,7 @@ export const GoogleSignin = async (data: IGoogleLoginUserData) => {
 export const Register = async (data: IRegisterUserData) => {
     try {
         const response = await axios.post(register, {
-            roleId: data.roleId,
+            roleName: data.roleName,
             email: data.email,
             password: data.password,
             lastName: data.lastName,

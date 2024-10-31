@@ -1,19 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, FlatList, Platform } from 'react-native';
+import React from 'react';
+import { View, FlatList, Platform } from 'react-native';
 import { responsiveWidth } from 'react-native-responsive-dimensions';
-import FlashMessage from 'react-native-flash-message';
-
 import { hooks } from '../../../hooks';
-import { custom } from '../../../custom';
 import { theme } from '../../../constants';
 import { components } from '../../../components';
-
-import { queryHooks } from '../../../store/slices/apiSlice';
-
-import { statusBarHeight } from '../../../utils';
 import { useQuery } from '@tanstack/react-query';
-import { useProductTopReviewQuery, useProductsQuery } from '../../../api/query/product-query';
-import { ProductAPIEnum } from '../../../constants/enum/product-enum';
+import { useProductTopReviewQuery } from '../../../api/query/product-query';
 import { IProductMain } from '../../../constants/model/product-interface';
 
 const TopReviewedProduct: React.FC = () => {

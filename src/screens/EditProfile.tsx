@@ -36,6 +36,7 @@ const EditProfile: React.FC<Props> = ({ route }) => {
 
   const [firstName, setFirstName] = useState(user.firstName)
   const [lastName, setLastName] = useState(user.lastName)
+  const [gender, setGender] = useState(user.gender)
   const [phone, setPhone] = useState(user.phone)
   const [image, setImage] = useState<any>(null)
 
@@ -46,14 +47,14 @@ const EditProfile: React.FC<Props> = ({ route }) => {
     const data: IUpdateUserData = {
       firstName: firstName,
       lastName: lastName,
-      // gender: gender,
+      gender: gender,
       phone: phone,
       fileAvatar: image as File || undefined
     }
     const formData = new FormData();
     formData.append('LastName', data.lastName as string)
     formData.append('FirstName', data.firstName as string)
-    // formData.append('Gender', data.gender as string)
+    formData.append('Gender', data.gender as string)
     formData.append('Phone', data.phone as string)
     formData.append('FileAvatar', data.fileAvatar as File)
 
@@ -82,6 +83,8 @@ const EditProfile: React.FC<Props> = ({ route }) => {
       }
     }
   }
+
+  console.log(gender)
 
   if (loading) {
     return <components.Loader />;
@@ -135,10 +138,6 @@ const EditProfile: React.FC<Props> = ({ route }) => {
       { label: 'Female', value: 'Female' }
     ];
 
-    const handleValueChange = (value: any) => {
-      console.log('Selected Value:', value);
-    };
-
     return (
       <React.Fragment>
         <custom.InputField
@@ -157,9 +156,10 @@ const EditProfile: React.FC<Props> = ({ route }) => {
         />
         <custom.SelectField
           label="Gender"
+          value={gender}
           placeholder="Select a gender"
           data={options}
-          onValueChange={handleValueChange}
+          onValueChange={(value) => setGender(value)}
         />
         <custom.InputField
           label='Phone number'
