@@ -227,8 +227,9 @@ const Header: React.FC<Props> = ({
   const renderLogo = () => {
     if (logo && !title) {
       return (
-        <View style={{ top: -3 }}>
-          <svg.LogoSvg />
+        <View>
+          {/* <svg.LogoSvg /> */}
+          <Text style={{ ...theme.fonts.H2, color: theme.colors.mainColor, fontWeight: 'bold' }}>FashionAI</Text>
         </View>
       );
     }
