@@ -1,51 +1,96 @@
-import { Text, Image, View, TouchableOpacity, TextInput } from 'react-native';
+import { View } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 import { custom } from '../custom';
 import { theme } from '../constants';
 import { components } from '../components';
-import WebView from 'react-native-webview';
-import MapView, { Marker, UrlTile } from 'react-native-maps';
+import MapWebView from './WebMapView';
+import MapPlacePrediction from './MapPlacePrediction';
+import { GetLocationDetail, GetMapPrediction } from '../api/map-api';
+import { utils } from '../utils';
+import { hooks } from '../hooks';
+import { IPaymentStorage } from '../constants/model/payment-interface';
+import { actions } from '../store/actions';
 
-const addresses = [
-  {
-    id: 1,
-    name: 'Home',
-    address: '8000 S Kirkland Ave, Chicago',
-  },
-  {
-    id: 2,
-    name: 'Work',
-    address: '8000 S Kirkland Ave, Chicago',
-  },
-  {
-    id: 3,
-    name: 'Other',
-    address: '8000 S Kirkland Ave, Chicago',
-  },
-  {
-    id: 4,
-    name: 'Current Location',
-  },
-];
+
+
 
 const CheckoutShippingDetails: React.FC = () => {
-  const [selectedAddress, setSelectedAddress] = useState(
-    addresses.length > 0 ? addresses[0].id : null,
-  );
 
-  const [region, setRegion] = useState({
-    latitude: 37.7749,    // Default latitude
-    longitude: -122.4194, // Default longitude
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
+  const map_api_token = '3jHRDBVy1j67Uxz9fhKD5Faatm0pOznUluD6Caer'
+
+  const navigation = hooks.useNavigation();
+  const dispatch = hooks.useDispatch();
+
+  const [loading, setLoading] = useState(false)
+
+  const [modalVisible, setModalVisible] = useState(false);
+
   const [address, setAddress] = useState('');
-  const [marker, setMarker] = useState(null);
 
-  const [currentLocation, setCurrentLocation] = useState(false);
+  const [addressPrediction, setAddressPrediction] = useState<MapPlace[]>([])
+
+  const [latitude, setLatitude] = useState(0)
+  const [longitude, setLongitude] = useState(0)
+
+
+  const searchAddress = async () => {
+    try {
+      setLoading(true)
+      const res = await GetMapPrediction({ api_key: map_api_token, input: address });
+      if (res) {
+        setLoading(false)
+        if (res.success) {
+          setAddressPrediction(res.data.predictions)
+          setModalVisible(true)
+        } else {
+          utils.showMessage({
+            message: 'No location was found',
+            type: 'danger',
+            icon: 'danger'
+          })
+        }
+      }
+    }
+    catch (error) {
+      console.log(error)
+      utils.showMessage({
+        message: 'Something went wrong',
+        type: 'danger',
+        icon: 'danger'
+      })
+    }
+  };
+
+  const getLocation = async (id: string) => {
+    setLoading(true)
+    const res = await GetLocationDetail({ api_key: map_api_token, place_id: id })
+    if (res) {
+      setLoading(false)
+      setModalVisible(false)
+      if (res.success) {
+        setLatitude(res.data.result.geometry.location.lat)
+        setLongitude(res.data.result.geometry.location.lng)
+      } else {
+        utils.showMessage({
+          message: 'Something went wrong',
+          type: 'danger',
+          icon: 'danger'
+        })
+      }
+    }
+  }
+
+  const confirmAddress = () => {
+    const paymentDetail: IPaymentStorage = {
+      address: address,
+      note: '',
+    }
+    dispatch(actions.setPaymentDetail(paymentDetail))
+    navigation.navigate('Checkout')
+  }
+
 
   const renderHeader = () => {
     return <components.Header title='Shipping details' goBack={true} />;
@@ -61,28 +106,7 @@ const CheckoutShippingDetails: React.FC = () => {
           borderBottomColor: theme.colors.lightBlue,
         }}
       >
-        {/* <WebView
-          source={{
-            uri: 'https://www.openstreetmap.org/#map=11/18.0806/106.1005',
-          }}
-          allowsFullscreenVideo
-          allowFileAccess
-          allowUniversalAccessFromFileURLs
-          originWhitelist={['*']}
-        /> */}
-        <MapView
-          initialRegion={{
-            latitude: 37.7749,    // Example latitude (San Francisco)
-            longitude: -122.4194, // Example longitude (San Francisco)
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-          <UrlTile
-            urlTemplate="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            maximumZ={19} // Max zoom level supported by OpenStreetMap
-          />
-        </MapView>
+        <MapWebView latitude={latitude} longitude={longitude} />
       </View>
     );
   };
@@ -96,158 +120,16 @@ const CheckoutShippingDetails: React.FC = () => {
         enableOnAndroid={true}
         showsVerticalScrollIndicator={false}
       >
-        {addresses.map((item, index, array) => {
-          return index !== array.length - 1 ? (
-            <TouchableOpacity
-              key={index}
-              style={{
-                width: '100%',
-                paddingTop: 10,
-                paddingBottom: 10,
-                paddingHorizontal: 20,
-                borderBottomWidth: 1,
-                borderBottomColor: theme.colors.lightBlue,
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
-              onPress={() => setSelectedAddress(item.id)}
-            >
-              <View style={{ marginTop: 10 }}>
-                <Text
-                  style={{
-                    ...theme.fonts.H5,
-                    color: theme.colors.mainColor,
-                    marginBottom: 4,
-                  }}
-                  numberOfLines={1}
-                >
-                  {item.name}
-                </Text>
-                <Text
-                  style={{
-                    ...theme.fonts.Mulish_Regular,
-                    fontSize: 14,
-                    lineHeight: 14 * 1.5,
-                    color: theme.colors.textColor,
-                  }}
-                  numberOfLines={1}
-                >
-                  {item.address}
-                </Text>
-              </View>
-              <View
-                style={{
-                  width: 20,
-                  height: 20,
-                  borderRadius: 20 / 2,
-                  borderWidth: 2,
-                  borderColor: theme.colors.lightBlue,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {selectedAddress === item.id && (
-                  <View
-                    style={{
-                      width: 10,
-                      height: 10,
-                      backgroundColor: theme.colors.accent,
-                      borderRadius: 10 / 2,
-                    }}
-                  />
-                )}
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              key={index}
-              style={{ marginTop: 20, paddingHorizontal: 20 }}
-              onPress={() => setSelectedAddress(item.id)}
-            >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <View style={{ width: theme.sizes.width - 40 - 40 }}>
-                  <custom.InputField
-                    placeholder='3646 S 58th Ave, Cicero, IL 608'
-                    label='enter an address'
-                  />
-                </View>
-                <View
-                  style={{
-                    width: 20,
-                    height: 20,
-                    borderRadius: 20 / 2,
-                    borderWidth: 2,
-                    borderColor: theme.colors.lightBlue,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {selectedAddress === item.id && (
-                    <View
-                      style={{
-                        width: 10,
-                        height: 10,
-                        backgroundColor: theme.colors.accent,
-                        borderRadius: 10 / 2,
-                      }}
-                    />
-                  )}
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
-        })}
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginHorizontal: 20,
-            marginTop: 10,
-            marginBottom: 20,
-          }}
-          onPress={() => setCurrentLocation(!currentLocation)}
-        >
-          <View
-            style={{
-              width: 18,
-              height: 18,
-              borderRadius: 5,
-              borderWidth: 2,
-              borderColor: theme.colors.lightBlue,
-              marginRight: 10,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {currentLocation && (
-              <View
-                style={{
-                  width: 10,
-                  height: 10,
-                  backgroundColor: theme.colors.lightBlue,
-                  borderRadius: 2,
-                }}
-              />
-            )}
-          </View>
-          <Text
-            style={{
-              ...theme.fonts.Mulish_Regular,
-              fontSize: 14,
-              lineHeight: 14 * 1.5,
-              color: theme.colors.textColor,
-            }}
-          >
-            Use current location
-          </Text>
-        </TouchableOpacity>
+        <View style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: 20, marginTop: 20 }}>
+          <custom.InputField
+            placeholder='3646 S 58th Ave, Cicero, IL 608'
+            label='enter an address'
+            value={address}
+            onChangeText={(value) => setAddress(value)}
+          />
+          <components.Button title={loading ? 'Loading' : 'Choose location'} onPress={searchAddress} disabled={loading} />
+          <components.Button title={loading ? 'Loading' : 'Confirm address'} onPress={confirmAddress} disabled={loading} />
+        </View>
       </KeyboardAwareScrollView>
     );
   };
@@ -256,6 +138,13 @@ const CheckoutShippingDetails: React.FC = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.colors.white }}>
       {renderHeader()}
       {renderMap()}
+      <MapPlacePrediction
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        mapPlaces={addressPrediction}
+        getLocation={getLocation}
+        setAddress={setAddress}
+      />
       {renderContent()}
     </SafeAreaView>
   );

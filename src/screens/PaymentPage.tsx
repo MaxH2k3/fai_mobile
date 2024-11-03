@@ -17,7 +17,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'PaymentPage'>;
 
 const PaymentPage: React.FC<Props> = ({ route, navigation }) => {
 
-  const { url } = route.params;
+  const { url, method } = route.params;
   const [loading, setLoading] = useState<boolean>(false);
   const user = hooks.useSelector((state) => state.appState.user);
   const paymentDetail = hooks.useSelector((state) => state.appState.paymentDetail)
@@ -61,35 +61,48 @@ const PaymentPage: React.FC<Props> = ({ route, navigation }) => {
     setCookie();
   }, []);
 
-  // Handle URL changes in the WebView
-  const handlePayOsNavigationChange = (event: WebViewNavigation) => {
-    // Check if the current URL is the return URL from payos
-    if (event.url.includes('https://fashion-ai-innovation.vercel.app/payments/payos') && !checkOutCalled) {
-      const responseParams = new URLSearchParams(event.url.split('?')[1]);
-      const payosResponseCode = responseParams.get('code'); // Update based on actual parameter names
+  const handlePayOsNavigationChange = async (event: WebViewNavigation) => {
+    if (event.url.includes('https://fashion-ai-innovation.vercel.app') && !checkOutCalled) {
 
-      // Determine status based on payos response code (assume '00' means success for this example)
+      const queryString = event.url.split('?')[1] || '';
+      const responseParams = new URLSearchParams(event.url.split('?')[1]);
+      const payosResponseCode = responseParams.get('code');
       const status = payosResponseCode === '00' ? 'Success' : 'Failure';
 
-      // Close the WebView and navigate based on the status
       setLoading(false);
 
-      // Optional: Call backend to confirm payment details
-      // if (status === 'Success') {
-      //   const orderDetails = {
-      //     transactionId: responseParams.get('payos_TransactionNo') || '',
-      //     amount: responseParams.get('payos_Amount') || '',
-      //     // Add other necessary params based on `payos` response
-      //   };
-      //   createOrderInBackend(orderDetails);
-      // }
+      if (status === 'Success') {
+        setLoading(true)
+        setCheckOutCalled(true)
+        const data: ICheckOutData = {
+          paymentMethod: 'PAYOS',
+          address: paymentDetail?.address as string,
+          note: paymentDetail?.note as string,
+          details: items,
+          callbackUrl: queryString,
+          voucherCode: paymentDetail?.voucherCode
+        };
+
+        const res = await CheckOut(data, user!.token);
+        if (res) {
+          console.log(res)
+          setLoading(false)
+          if (res.success) {
+            dispatch(actions.resetCart())
+            navigation.navigate('OrderSuccessful')
+          } else {
+            navigation.navigate('OrderFailed')
+          }
+        }
+      }
+      else {
+        navigation.navigate('OrderFailed')
+      }
     }
   };
 
-  console.log(loading)
 
   const handleVnPayNavigationChange = async (event: WebViewNavigation) => {
-    console.log(event.url)
     if (event.url.includes('https://fashion-ai-innovation.vercel.app') && !checkOutCalled) {
 
       const queryString = event.url.split('?')[1] || '';
@@ -129,21 +142,6 @@ const PaymentPage: React.FC<Props> = ({ route, navigation }) => {
     }
   };
 
-  // Example function to send order details to backend
-  const createOrderInBackend = async (orderDetails: { transactionId: string; amount: string }) => {
-    try {
-      const response = await fetch('https://your-backend.com/api/order/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(orderDetails),
-      });
-      console.log('Order created:', await response.json());
-    } catch (error) {
-      console.error('Error creating order:', error);
-    }
-  };
 
   const renderStatusBar = () => {
     return <custom.StatusBar />;
@@ -167,7 +165,7 @@ const PaymentPage: React.FC<Props> = ({ route, navigation }) => {
           url ? (
             <WebView
               source={{ uri: url }}
-              onNavigationStateChange={handleVnPayNavigationChange}
+              onNavigationStateChange={method == 'VNPAY' ? handleVnPayNavigationChange : handlePayOsNavigationChange}
             />
           ) : (
             <Text>No URL provided</Text>

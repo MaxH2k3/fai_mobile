@@ -1,7 +1,7 @@
 const faiEndPoint = 'https://fashion-ai-innovation.azurewebsites.net/api/v1';
 const cityEndPoint = 'https://provinces.open-api.vn/api'
 const faiAiEndPoint = 'https://fai-ai.azurewebsites.net/api'
-
+const mapEndPoint = 'https://rsapi.goong.io'
 
 export const createQueryString = (params: Record<string, any>): string => {
   const urlParams = new URLSearchParams();
@@ -95,3 +95,10 @@ export const changeOrderStatus = `${faiEndPoint}/order/status`
 
 // AI 
 export const tryOnOutfit = `${faiAiEndPoint}/try-on`
+
+
+// MAP 
+export const getPlacePrediction = `${mapEndPoint}/Place/AutoComplete`
+export const getLocationDetail = `${mapEndPoint}/Place/Detail`
+
+

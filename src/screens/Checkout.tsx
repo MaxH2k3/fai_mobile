@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { text } from '../text';
 import { hooks } from '../hooks';
@@ -16,17 +16,20 @@ import { storeData } from '../utils/storage-utils';
 import { actions } from '../store/actions';
 import { utils } from '../utils';
 
+
+
 const Checkout: React.FC = () => {
   const navigation = hooks.useNavigation();
   const dispatch = hooks.useDispatch();
 
   const cart: ICartItem[] = hooks.useSelector((state) => state.cartSlice.list);
+  const paymentDetail = hooks.useSelector((state) => state.appState.paymentDetail)
   const total = hooks.useSelector((state) => state.cartSlice.total);
   const user = hooks.useSelector((state) => state.appState.user);
 
   const [loading, setLoading] = useState(false)
   const [note, setNote] = useState('')
-  const [address, setAddress] = useState('')
+  const [address, setAddress] = useState(paymentDetail?.address || '')
   const [isVnPay, setIsVnPay] = useState(true)
 
   const items: IOrderItem[] = cart.map((item) => ({
@@ -35,6 +38,12 @@ const Checkout: React.FC = () => {
     color: item.color,
     size: item.size
   }))
+
+  useEffect(() => {
+    if (paymentDetail) {
+      setAddress(paymentDetail?.address)
+    }
+  }, [paymentDetail]);
 
   const handleCheckOut = async () => {
     setLoading(true);
@@ -186,7 +195,7 @@ const Checkout: React.FC = () => {
               marginBottom: 10,
             }}
           >
-            8000 S Kirkland Ave, Chicago, IL 6065...
+            {address}
           </Text>
         </View>
         <svg.RightArrowSvg />
@@ -228,7 +237,7 @@ const Checkout: React.FC = () => {
   const renderInputFields = () => {
     return (
       <View style={{ paddingHorizontal: 20, display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <custom.InputFieldBig label='Address' onChange={(value) => setAddress(value)} value={address} placeholder='Enter address' />
+        {/* <custom.InputFieldBig label='Address' onChange={(value) => setAddress(value)} value={address} placeholder='Enter address' /> */}
         <custom.InputFieldBig label='Note' onChange={(value) => setNote(value)} value={note} placeholder='Enter note' />
       </View>
     );

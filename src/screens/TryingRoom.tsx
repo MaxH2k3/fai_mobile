@@ -56,7 +56,6 @@ const TryingRoom: React.FC<Props> = ({ route }) => {
             icon: 'danger'
           })
         } else {
-
           setResultImage(response.data.url)
           utils.showMessage({
             message: 'Try out outfit successful',
@@ -78,7 +77,6 @@ const TryingRoom: React.FC<Props> = ({ route }) => {
         }).catch((err) => console.error("Error closing connection:", err));
       }
     };
-
   }, [connection]);
 
   const TryOutClothes = async () => {
@@ -112,8 +110,8 @@ const TryingRoom: React.FC<Props> = ({ route }) => {
       const data = new FormData();
       data.append('PersonInfo', outfitToTry.PersonInfo[0]);
       data.append('Categories', outfitToTry.Categories[0]);
-      data.append('HumanImage', outfitToTry.HumanImage);
-      data.append('ProductImage', outfitToTry.ProductImage);
+      data.append('HumanImage', outfitToTry.HumanImage as File);
+      data.append('ProductImage', outfitToTry.ProductImage as File);
 
       const res = await TryOnOutfit(data, user!.token);
 
@@ -161,8 +159,6 @@ const TryingRoom: React.FC<Props> = ({ route }) => {
 
   const renderContent = () => {
     return (
-
-
       <View
         style={{
           marginTop: 30,

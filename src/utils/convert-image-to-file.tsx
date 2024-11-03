@@ -13,12 +13,7 @@ const getMimeTypeFromUrl = (url: string): string => {
     }
 };
 
-export const imageUrlToFile = async (imageUrl: string, filename: string): Promise<File> => {
-    const response = await fetch(imageUrl);
-    const blob = await response.blob();
-
+export const imageUrlToFile = async (imageUrl: string, filename: string): Promise<any> => {
     const mimeType = getMimeTypeFromUrl(imageUrl) || 'application/octet-stream';
-    const file = new File([blob], filename, { type: mimeType });
-
-    return file;
+    return { uri: imageUrl, name: filename, type: mimeType }
 };
