@@ -61,8 +61,11 @@ const ChatComponent: React.FC = () => {
         }
       };
     };
-    if (!connection && user)
+
+    if (!connection && user) {
       setupConnection();
+    }
+
   }, [connection]);
 
   const SendMessage = () => {

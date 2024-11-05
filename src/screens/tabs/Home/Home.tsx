@@ -1,32 +1,20 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, FlatList, Platform } from 'react-native';
-import { responsiveWidth } from 'react-native-responsive-dimensions';
-import FlashMessage from 'react-native-flash-message';
-
 import { hooks } from '../../../hooks';
 import { custom } from '../../../custom';
 import { theme } from '../../../constants';
 import { components } from '../../../components';
-
 import { queryHooks } from '../../../store/slices/apiSlice';
-
-import { statusBarHeight } from '../../../utils';
 import { useQuery } from '@tanstack/react-query';
 import { useProductsQuery } from '../../../api/query/product-query';
-import { ProductAPIEnum } from '../../../constants/enum/product-enum';
 import NewProduct from './NewProducts';
 import BestSoldProduct from './BestSoldProduct';
 import TopReviewedProduct from './TopReviewedProduct';
 import { IProductMain } from '../../../constants/model/product-interface';
+import { responsiveHeight } from 'react-native-responsive-dimensions';
 
 const Home: React.FC = () => {
   const navigation = hooks.useNavigation();
-
-  const {
-    data: carouselData
-  } = queryHooks.useGetCarouselQuery();
-
-  const carousel = carouselData instanceof Array ? carouselData : [];
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
@@ -36,6 +24,18 @@ const Home: React.FC = () => {
       EachPage: 100,
     })
   );
+
+  const topBanners = [
+    'https://res.cloudinary.com/dhdyel6be/image/upload/f_auto,q_auto/v1/FAI/Anothers/yoyhnizabcacaoxwbjwd',
+    'https://res.cloudinary.com/dhdyel6be/image/upload/f_auto,q_auto/v1/FAI/Anothers/gzi1ctuijofvb3vnensf',
+    'https://res.cloudinary.com/dhdyel6be/image/upload/f_auto,q_auto/v1/FAI/Anothers/jp3og4toctgv9e8srojc',
+  ]
+
+  const bottomBanners = [
+    'https://res.cloudinary.com/dhdyel6be/image/upload/f_auto,q_auto/v1/FAI/Anothers/nbe5yfu96t9oyf6qlcyx',
+    'https://res.cloudinary.com/dhdyel6be/image/upload/f_auto,q_auto/v1/FAI/Anothers/gybkdh4eyhkfckdbaph1',
+    'https://res.cloudinary.com/dhdyel6be/image/upload/f_auto,q_auto/v1/FAI/Anothers/zv2innlarhcn55nqe8o6'
+  ]
 
   const products: IProductMain[] = data?.data.data || [];
 
@@ -65,49 +65,84 @@ const Home: React.FC = () => {
   };
 
   const renderCarousel = () => {
-    if (carousel.length > 0) {
-      return (
-        <View style={{ marginBottom: carousel.length > 0 ? 20 : 40 }}>
-          <custom.ScrollView
-            bounce={false}
-            horizontal={true}
-            pagingEnabled={true}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            onMomentumScrollEnd={updateCurrentSlideIndex}
-          >
-            {carousel.map((item, index) => {
-              return (
-                <custom.TouchableOpacity
-                  key={item.id}
-                  activeOpacity={0.5}
-                  onPress={() => {
-                    navigation.navigate('ProductList', {
-                      title: 'All product',
-                      products: products,
-                    });
+    return (
+      <View style={{ marginBottom: 20 }}>
+        <custom.ScrollView
+          bounce={false}
+          horizontal={true}
+          pagingEnabled={true}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          onMomentumScrollEnd={updateCurrentSlideIndex}
+        >
+          {topBanners.map((item, index) => {
+            return (
+              <custom.TouchableOpacity
+                key={item}
+                activeOpacity={0.5}
+                onPress={() => {
+                  navigation.navigate('ProductList', {
+                    title: 'All product',
+                    products: products,
+                  });
+                }}
+              >
+                <custom.Image
+                  source={{ uri: item }}
+                  style={{
+                    width: theme.sizes.width,
+                    aspectRatio: 375 / 300,
                   }}
-                >
-                  <custom.Image
-                    source={{ uri: item.image }}
-                    style={{
-                      width: theme.sizes.width,
-                      aspectRatio: 375 / 300,
-                    }}
-                  />
-                </custom.TouchableOpacity>
-              );
-            })}
-          </custom.ScrollView>
-        </View>
-      );
-    }
+                />
+              </custom.TouchableOpacity>
+            );
+          })}
+        </custom.ScrollView>
+      </View>
+    );
+  };
 
-    return null;
+  const renderBottomCarousel = () => {
+    return (
+      <View style={{ marginBottom: 20 }}>
+        <custom.ScrollView
+          bounce={false}
+          horizontal={true}
+          pagingEnabled={true}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          onMomentumScrollEnd={updateCurrentSlideIndex}
+        >
+          {bottomBanners.map((item, index) => {
+            return (
+              <custom.TouchableOpacity
+                key={item}
+                activeOpacity={0.5}
+                onPress={() => {
+                  navigation.navigate('ProductList', {
+                    title: 'All product',
+                    products: products,
+                  });
+                }}
+              >
+                <custom.Image
+                  source={{ uri: item }}
+                  style={{
+                    width: theme.sizes.width,
+                    height: responsiveHeight(6.7)
+                  }}
+                  resizeMode='contain'
+                />
+              </custom.TouchableOpacity>
+            );
+          })}
+        </custom.ScrollView>
+      </View>
+    );
   };
 
   const renderIndicator = () => {
-    if (carousel.length > 0) {
+    if (topBanners.length > 0) {
       return (
         <View
           style={{
@@ -117,10 +152,10 @@ const Home: React.FC = () => {
             marginBottom: 40,
           }}
         >
-          {carousel.map((item, index) => {
+          {topBanners.map((item, index) => {
             return (
               <View
-                key={item.id}
+                key={item}
                 style={{
                   width: currentSlideIndex === index ? 22 : 6,
                   height: currentSlideIndex === index ? 8 : 6,
@@ -154,6 +189,7 @@ const Home: React.FC = () => {
         <NewProduct />
         <BestSoldProduct />
         <TopReviewedProduct />
+        {renderBottomCarousel()}
       </ScrollView>
     )
   };

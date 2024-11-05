@@ -55,6 +55,7 @@ const MapPlacePrediction: React.FC<Props> = ({ modalVisible, setModalVisible, ma
           <View style={styles.modalContent}>
             {mapPlaces.map((place) => (
               <components.Button
+                key={place.place_id}
                 title={`${truncateText(place.description, 50)}`}
                 onPress={() => onChooseLocation(place.place_id, place.description)}
               />
