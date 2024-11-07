@@ -40,6 +40,7 @@ import EditPersonalProfile from './EditPersonalProfile';
 import ChatBot from './ChatBot';
 import TryingRoom from './TryingRoom';
 import PaymentPage from './PaymentPage';
+import AllProductPage from './AllProductPage';
 
 export const screens = {
   Home,
@@ -54,6 +55,7 @@ export const screens = {
   Product,
   ProductDetail,
   ProductList,
+  AllProductPage,
   Wishlist,
   Checkout,
   MyAddress,

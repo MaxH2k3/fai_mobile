@@ -49,7 +49,7 @@ const ProductList: React.FC<Props> = ({ route }) => {
 
   const renderContent = () => {
     if (products?.length === 0) {
-      return <Text>There is no products with this category yet</Text>;
+      return <Text>There is no products yet</Text>;
     }
 
     if (products?.length > 0) {

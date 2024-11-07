@@ -33,7 +33,7 @@ const CheckoutShippingDetails: React.FC = () => {
 
   const [latitude, setLatitude] = useState(0)
   const [longitude, setLongitude] = useState(0)
-
+  const [uri, setUri] = useState('')
 
   const searchAddress = async () => {
     try {
@@ -70,6 +70,7 @@ const CheckoutShippingDetails: React.FC = () => {
       setLoading(false)
       setModalVisible(false)
       if (res.success) {
+        setUri(res.data.result.url)
         setLatitude(res.data.result.geometry.location.lat)
         setLongitude(res.data.result.geometry.location.lng)
       } else {
@@ -101,12 +102,12 @@ const CheckoutShippingDetails: React.FC = () => {
       <View
         style={{
           width: '100%',
-          height: theme.sizes.height * 0.45,
+          height: theme.sizes.height * 0.6,
           borderBottomWidth: 1,
           borderBottomColor: theme.colors.lightBlue,
         }}
       >
-        <MapWebView latitude={latitude} longitude={longitude} />
+        <MapWebView latitude1={latitude} longitude1={longitude} latitude2={10.5353285} longitude2={107.4055814} uri={uri} />
       </View>
     );
   };

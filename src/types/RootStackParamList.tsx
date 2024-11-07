@@ -46,6 +46,7 @@ export type RootStackParamList = {
     title: string
     products: IProductMain[]
   }
+  AllProductPage: undefined;
   MyPromocodesEmpty: undefined;
   SignUpAccountCreated: undefined;
   CheckoutPaymentMethod: undefined;
@@ -66,5 +67,5 @@ export type RootStackParamList = {
   PaymentPage: {
     url: string
     method: string
-  }
+  },
 };

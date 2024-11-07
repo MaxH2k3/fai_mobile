@@ -81,10 +81,7 @@ const Home: React.FC = () => {
                 key={item}
                 activeOpacity={0.5}
                 onPress={() => {
-                  navigation.navigate('ProductList', {
-                    title: 'All product',
-                    products: products,
-                  });
+                  navigation.navigate('AllProductPage');
                 }}
               >
                 <custom.Image

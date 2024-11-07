@@ -1,133 +1,145 @@
 import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, Modal } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 import { hooks } from '../hooks';
 import { custom } from '../custom';
 import { theme } from '../constants';
 import { components } from '../components';
+import { Currency } from '../constants/enum/currency-enum';
+import formatNumber from '../utils/format-number';
 
-const SIZE = [
-  {
-    id: '1',
-    size: 'xs',
-  },
-  {
-    id: '2',
-    size: 's',
-  },
-  {
-    id: '3',
-    size: 'm',
-  },
-  {
-    id: '4',
-    size: 'l',
-  },
-  {
-    id: '5',
-    size: 'xl',
-  },
-  {
-    id: '6',
-    size: 'xxl',
-  },
-];
+const CATEGORY = [
+  'Blouse',
+  'Hoodie',
+  'Long Sleeve Shirt',
+  'Polo',
+  'Shirt Female',
+  'Shirt Male',
+  'T-Shirt Female',
+  'T-Shirt Male'
+]
+
+const GENDER = [
+  'Male',
+  'Female',
+  'Unisex'
+]
 
 const COLOR = [
-  {
-    id: '1',
-    color: '#FF6262',
-  },
-  {
-    id: '2',
-    color: '#63C7FF',
-  },
-  {
-    id: '3',
-    color: '#F8E7CD',
-  },
-  {
-    id: '4',
-    color: '#323858',
-  },
-  {
-    id: '5',
-    color: '#111111',
-  },
+  'red',
+  // 'brown',
+  'orange',
+  // 'yellow',
+  // 'blue',
+  // 'purple',
+  // 'pink',
+  'white',
+  'black',
+  // 'green',
+  // 'cyan',
+  'gray',
+  'beige'
+]
+
+const SIZE = [
+  'XS',
+  'S',
+  'M',
+  'L',
+  'XL',
+  'XXL',
 ];
 
-const TAGS = [
-  {
-    id: '1',
-    tag: 'kids',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  {
-    id: '2',
-    tag: 'sport',
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  {
-    id: '3',
-    tag: 'dress',
+  modalContent: {
+    width: '100%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+    gap: 20
   },
-  {
-    id: '4',
-    tag: 'pants',
-  },
-  {
-    id: '5',
-    tag: 't-shirt',
-  },
-  {
-    id: '6',
-    tag: 'hat',
-  },
-  {
-    id: '7',
-    tag: 'unisex',
-  },
-  {
-    id: '8',
-    tag: 'bag',
-  },
-  {
-    id: '9',
-    tag: 'accessories',
-  },
-  {
-    id: '10',
-    tag: 'shoes',
-  },
-  {
-    id: '11',
-    tag: 'polo',
-  },
-];
+});
 
 interface Prop {
-  size: string
+  category: string
+  setCategory: (cat: string) => void
+  gender: string
+  setGender: (gen: string) => void
   color: string
-  price: string
+  setColor: (col: string) => void
+  size: string
+  setSize: (size: string) => void
+  minPrice: number
+  setMinPrice: (min: number) => void
+  maxPrice: number
+  setMaxPrice: (max: number) => void
+  isModalOpen: boolean
+  setIsModalOpen: (open: boolean) => void
 }
 
-const Filter: React.FC = () => {
-  const navigation = hooks.useNavigation();
+const ProductFilter: React.FC<Prop> = ({
+  category,
+  setCategory,
+  gender,
+  setGender,
+  color,
+  setColor,
+  size,
+  setSize,
+  minPrice,
+  setMinPrice,
+  maxPrice,
+  setMaxPrice,
+  isModalOpen,
+  setIsModalOpen
+}) => {
+  const [productCategory, setProductCategory] = useState<string>(category || '')
+  const [productGender, setProductGender] = useState<string>(gender || '')
+  const [productColor, setProductColor] = useState<string>(color || '')
+  const [productSize, setProductSize] = useState<string>(size || '')
+  const [productMinPrice, setProductMinPrice] = useState<number>(minPrice || 0)
+  const [productMaxPrice, setProductMaxPrice] = useState<number>(maxPrice || 130000)
 
-  const [productSize, setProductSize] = useState(1);
-  const [productColor, setProductColor] = useState(1);
-  const [productTag, setProductTag] = useState(1);
+  const handleApplyFilter = () => {
+    setCategory(productCategory)
+    setGender(productGender)
+    setColor(productColor)
+    setSize(productSize)
+    setMinPrice(productMinPrice)
+    setMaxPrice(productMaxPrice)
+    setIsModalOpen(false)
+  }
 
-  const renderHeader = () => {
-    return <components.Header title='Filter' goBack={true} />;
-  };
+  const handlePriceChange = (min: number, max: number) => {
+    setProductMinPrice(min)
+    setProductMaxPrice(max)
+  }
 
-  const renderStatusBar = () => {
-    return <custom.StatusBar />;
-  };
+  const handleResetFilter = () => {
+    setProductCategory('')
+    setProductGender('')
+    setProductColor('')
+    setProductSize('')
+    setProductMinPrice(10000)
+    setProductMaxPrice(130000)
+  }
 
   const renderSize = () => {
     return (
-      <View>
+      <View style={{ width: 350 }}>
         <Text
           style={{
             ...theme.fonts.H5,
@@ -147,7 +159,7 @@ const Filter: React.FC = () => {
         >
           {SIZE.map((item, index) => (
             <custom.TouchableOpacity
-              key={item.id}
+              key={index}
               style={{
                 width: 50,
                 height: 50,
@@ -157,11 +169,11 @@ const Filter: React.FC = () => {
                 alignItems: 'center',
                 borderRadius: 50,
                 backgroundColor:
-                  productSize == index
+                  productSize.toLowerCase() == SIZE[index].toLowerCase()
                     ? theme.colors.lightBlue
                     : theme.colors.transparent,
               }}
-              onPress={() => setProductSize(index)}
+              onPress={() => setProductSize(item)}
             >
               <Text
                 style={{
@@ -171,7 +183,7 @@ const Filter: React.FC = () => {
                   color: theme.colors.mainColor,
                 }}
               >
-                {item.size}
+                {item}
               </Text>
             </custom.TouchableOpacity>
           ))}
@@ -203,19 +215,19 @@ const Filter: React.FC = () => {
 
         {COLOR.map((item, index) => (
           <custom.TouchableOpacity
-            key={item.id}
-            onPress={() => setProductColor(index)}
+            key={index}
+            onPress={() => setProductColor(item)}
           >
             <View
               style={{
                 width: 30,
                 height: 30,
-                backgroundColor: item.color,
+                backgroundColor: item,
                 marginHorizontal: 7,
                 borderRadius: 19,
                 borderWidth: 4,
                 borderColor:
-                  productColor == index
+                  productColor == COLOR[index]
                     ? theme.colors.lightBlue
                     : theme.colors.transparent,
               }}
@@ -228,7 +240,7 @@ const Filter: React.FC = () => {
 
   const renderPrice = () => {
     return (
-      <View style={{ marginBottom: 40 }}>
+      <View style={{ marginBottom: 40, width: 350 }}>
         <Text
           style={{
             marginBottom: 20,
@@ -240,6 +252,7 @@ const Filter: React.FC = () => {
         </Text>
         <MultiSlider
           isMarkersSeparated={true}
+          onValuesChangeFinish={(value) => handlePriceChange(value[0], value[1])}
           customMarkerLeft={(e) => {
             return (
               <View style={{ alignItems: 'center' }}>
@@ -258,12 +271,12 @@ const Filter: React.FC = () => {
                     position: 'absolute',
                     bottom: -30,
                     ...theme.fonts.Mulish_Regular,
-                    fontSize: 14,
+                    fontSize: 10,
                     color: theme.colors.textColor,
                     lineHeight: 16 * 1.6,
                   }}
                 >
-                  ${e.currentValue}
+                  {formatNumber(productMinPrice)}{Currency.VND}
                 </Text>
               </View>
             );
@@ -286,25 +299,25 @@ const Filter: React.FC = () => {
                     position: 'absolute',
                     bottom: -30,
                     ...theme.fonts.Mulish_Regular,
-                    fontSize: 14,
+                    fontSize: 10,
                     color: theme.colors.textColor,
                     lineHeight: 16 * 1.6,
                   }}
                 >
-                  ${e.currentValue}
+                  {formatNumber(productMaxPrice)}{Currency.VND}
                 </Text>
               </View>
             );
           }}
-          values={[0, 800]}
-          min={0}
-          max={800}
-          step={1}
-          sliderLength={theme.sizes.width - 40}
-          onValuesChange={(e) => { }}
+          values={[30000, 130000]}
+          min={10000}
+          max={130000}
+          step={1000}
+          sliderLength={330}
           selectedStyle={{
             backgroundColor: theme.colors.mainColor,
             width: 300,
+            marginLeft: 10
           }}
           unselectedStyle={{
             backgroundColor: '#DBE3F5',
@@ -323,23 +336,7 @@ const Filter: React.FC = () => {
     );
   };
 
-  const renderCategory = () => {
-    return (
-      <View
-        style={{
-          marginBottom: 40,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
-        <components.ProductStatus status='sale' color='#69864D' />
-        <components.ProductStatus status='sale' color='#CFA93F' />
-        <components.ProductStatus status='sale' color='#864D7D' />
-      </View>
-    );
-  };
-
-  const renderTags = () => {
+  const renderGender = () => {
     return (
       <View
         style={{
@@ -348,7 +345,7 @@ const Filter: React.FC = () => {
           flexWrap: 'wrap',
         }}
       >
-        {TAGS.map((item, index) => (
+        {GENDER.map((item, index) => (
           <custom.TouchableOpacity
             style={{
               marginBottom: 8,
@@ -357,12 +354,12 @@ const Filter: React.FC = () => {
               borderColor: theme.colors.lightBlue,
               borderWidth: 1,
               backgroundColor:
-                productTag == index
+                productGender == GENDER[index]
                   ? theme.colors.lightBlue
                   : theme.colors.transparent,
             }}
-            key={item.id}
-            onPress={() => setProductTag(index)}
+            key={item}
+            onPress={() => setProductGender(item)}
           >
             <Text
               style={{
@@ -374,7 +371,49 @@ const Filter: React.FC = () => {
                 color: theme.colors.mainColor,
               }}
             >
-              {item.tag}
+              {item}
+            </Text>
+          </custom.TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+  const renderCategories = () => {
+    return (
+      <View
+        style={{
+          marginBottom: 20,
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+        }}
+      >
+        {CATEGORY.map((item, index) => (
+          <custom.TouchableOpacity
+            style={{
+              marginBottom: 8,
+              marginRight: 8,
+              borderRadius: 50,
+              borderColor: theme.colors.lightBlue,
+              borderWidth: 1,
+              backgroundColor:
+                productCategory == CATEGORY[index]
+                  ? theme.colors.lightBlue
+                  : theme.colors.transparent,
+            }}
+            key={item}
+            onPress={() => setProductCategory(item)}
+          >
+            <Text
+              style={{
+                paddingHorizontal: 20,
+                paddingVertical: 6,
+                textTransform: 'uppercase',
+                fontSize: 12,
+                ...theme.fonts.Mulish_SemiBold,
+                color: theme.colors.mainColor,
+              }}
+            >
+              {item}
             </Text>
           </custom.TouchableOpacity>
         ))}
@@ -382,40 +421,47 @@ const Filter: React.FC = () => {
     );
   };
 
+
   const renderButton = () => {
     return (
-      <components.Button
-        title='apply filters'
-        onPress={() => navigation.goBack()}
-      />
-    );
-  };
-
-  const renderContent = () => {
-    return (
-      <custom.ScrollView
-        contentContainerStyle={{
-          paddingHorizontal: 20,
-          paddingBottom: 40,
-        }}
-      >
-        {renderSize()}
-        {renderColor()}
-        {renderPrice()}
-        {renderCategory()}
-        {renderTags()}
-        {renderButton()}
-      </custom.ScrollView>
+      <View style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <components.Button
+          title='apply filters'
+          onPress={handleApplyFilter}
+        />
+        <components.Button
+          title='reset filters'
+          onPress={handleResetFilter}
+        />
+      </View>
     );
   };
 
   return (
-    <custom.SmartView>
-      {renderStatusBar()}
-      {renderHeader()}
-      {renderContent()}
-    </custom.SmartView>
+    <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <custom.ScrollView
+            >
+              {renderSize()}
+              {renderColor()}
+              {renderPrice()}
+              {renderGender()}
+              {renderCategories()}
+              {renderButton()}
+            </custom.ScrollView>
+          </View>
+        </View>
+      </Modal >
+    </View >
   );
+
 };
 
-export default Filter;
+export default ProductFilter;

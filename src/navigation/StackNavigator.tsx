@@ -113,6 +113,11 @@ const StackNavigator = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
+            name='AllProductPage'
+            component={screens.AllProductPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name='EditProfile'
             component={screens.EditProfile}
             options={{ headerShown: false }}

@@ -28,6 +28,7 @@ const SignUp: React.FC = () => {
   const [email, setEmail] = useState('')
   const [gender, setGender] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
   const [otp, setOtp] = useState('')
 
   const renderStatusBar = () => {
@@ -58,26 +59,34 @@ const SignUp: React.FC = () => {
 
 
   const handleRegister = async () => {
-    setLoading(true);
-    const data: IRegisterUserData = {
-      roleName: '1',
-      email: email,
-      password: password,
-      lastName: lastName,
-      firstName: firstName,
-      gender: gender
-    };
-    const res = await Register(data);
-    if (res) {
-      setLoading(false);
-      if (res.success) {
-        setStep(2);
-      } else {
-        utils.showMessage({
-          message: res.message || 'Something went wrong',
-          type: 'danger',
-          icon: 'danger'
-        })
+    if (password !== passwordConfirm) {
+      utils.showMessage({
+        message: 'Your password does not match',
+        type: 'danger',
+        icon: 'danger'
+      })
+    } else {
+      setLoading(true);
+      const data: IRegisterUserData = {
+        roleName: '1',
+        email: email,
+        password: password,
+        lastName: lastName,
+        firstName: firstName,
+        gender: gender
+      };
+      const res = await Register(data);
+      if (res) {
+        setLoading(false);
+        if (res.success) {
+          setStep(2);
+        } else {
+          utils.showMessage({
+            message: res.data.Data[0].ErrorMessage || 'Something went wrong',
+            type: 'danger',
+            icon: 'danger'
+          })
+        }
       }
     }
   };
@@ -157,6 +166,16 @@ const SignUp: React.FC = () => {
               marginBottom: 20,
             }}
             onChangeText={(value) => setPassword(value)}
+          />
+          <custom.InputField
+            label='Confirm password'
+            placeholder='••••••••'
+            secureTextEntry={true}
+            eyeOffIcon={true}
+            containerStyle={{
+              marginBottom: 20,
+            }}
+            onChangeText={(value) => setPasswordConfirm(value)}
           />
         </View>
       </>
