@@ -20,13 +20,13 @@ const App = () => {
       authStatus === firebase.messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
-      console.log('Authorization status:', authStatus);
+      // console.log('Authorization status:', authStatus);
     }
   }
 
   const getToken = async () => {
     const token = await firebase.messaging().getToken();
-    console.log('Token:', token);
+    // console.log('Token:', token);
   }
 
   useEffect(() => {

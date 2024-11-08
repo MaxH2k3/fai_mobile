@@ -76,7 +76,7 @@ const Order: React.FC = () => {
             <text.H5>Subtotal</text.H5>
             <text.H5>{formatNumber(total)}{Currency.VND}</text.H5>
           </View>
-          <View
+          {/* <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
@@ -105,7 +105,7 @@ const Order: React.FC = () => {
             >
               0{Currency.VND}
             </Text>
-          </View>
+          </View> */}
           <View
             style={{
               flexDirection: 'row',

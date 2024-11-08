@@ -398,6 +398,11 @@ const ProductDetail: React.FC<Props> = ({ route }) => {
           })}
           containerStyle={{ marginBottom: 14 }}
         />
+        <components.Button
+          title='Chat with owner'
+          onPress={() => navigation.navigate('ChatHuman', { brandId: product.createdBy.id })}
+          containerStyle={{ marginBottom: 14 }}
+        />
       </View>
     );
   };

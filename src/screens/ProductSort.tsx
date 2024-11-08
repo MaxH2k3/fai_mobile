@@ -1,55 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Modal } from 'react-native';
-import MultiSlider from '@ptomasroos/react-native-multi-slider';
-
-import { hooks } from '../hooks';
-import { custom } from '../custom';
-import { theme } from '../constants';
 import { components } from '../components';
-import { Currency } from '../constants/enum/currency-enum';
-import formatNumber from '../utils/format-number';
 
-const CATEGORY = [
-  'Blouse',
-  'Hoodie',
-  'Long Sleeve Shirt',
-  'Polo',
-  'Shirt Female',
-  'Shirt Male',
-  'T-Shirt Female',
-  'T-Shirt Male'
-]
-
-const GENDER = [
-  'Male',
-  'Female',
-  'Unisex'
-]
-
-const COLOR = [
-  'red',
-  // 'brown',
-  'orange',
-  // 'yellow',
-  // 'blue',
-  // 'purple',
-  // 'pink',
-  'white',
-  'black',
-  // 'green',
-  // 'cyan',
-  'gray',
-  'beige'
-]
-
-const SIZE = [
-  'XS',
-  'S',
-  'M',
-  'L',
-  'XL',
-  'XXL',
-];
 
 const styles = StyleSheet.create({
   container: {

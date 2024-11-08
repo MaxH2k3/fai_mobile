@@ -1,5 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { WebView } from 'react-native-webview';
+
+import { NativeModules } from 'react-native';
+import { setBadgeCount } from './zzz';
+
 
 interface Prop {
   latitude1: number
@@ -8,6 +12,7 @@ interface Prop {
   longitude2: number
   uri: string
 }
+
 
 const MapWebView: React.FC<Prop> = ({ latitude1, longitude1, latitude2, longitude2, uri }) => {
   const mapHTML = `
@@ -45,6 +50,7 @@ const MapWebView: React.FC<Prop> = ({ latitude1, longitude1, latitude2, longitud
   </body>
   </html>
 `;
+
 
   return (
     <WebView

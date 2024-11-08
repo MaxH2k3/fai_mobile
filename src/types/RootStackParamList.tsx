@@ -59,6 +59,9 @@ export type RootStackParamList = {
     products: ProductType[]
   };
   ChatBot: undefined;
+  ChatHuman: {
+    brandId: string
+  }
   TryingRoom: {
     PersonInfo: string[];
     Categories: string[];

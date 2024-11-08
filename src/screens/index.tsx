@@ -41,6 +41,7 @@ import ChatBot from './ChatBot';
 import TryingRoom from './TryingRoom';
 import PaymentPage from './PaymentPage';
 import AllProductPage from './AllProductPage';
+import ChatHuman from './ChatHuman';
 
 export const screens = {
   Home,
@@ -82,6 +83,7 @@ export const screens = {
   ForgotPasswordSentEmail,
   CheckoutShippingDetails,
   ChatBot,
+  ChatHuman,
   TryingRoom,
   PaymentPage
 };

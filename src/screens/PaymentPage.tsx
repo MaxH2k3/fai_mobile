@@ -85,7 +85,6 @@ const PaymentPage: React.FC<Props> = ({ route, navigation }) => {
 
         const res = await CheckOut(data, user!.token);
         if (res) {
-          console.log(res)
           setLoading(false)
           if (res.success) {
             dispatch(actions.resetCart())
@@ -126,7 +125,6 @@ const PaymentPage: React.FC<Props> = ({ route, navigation }) => {
 
         const res = await CheckOut(data, user!.token);
         if (res) {
-          console.log(res)
           setLoading(false)
           if (res.success) {
             dispatch(actions.resetCart())

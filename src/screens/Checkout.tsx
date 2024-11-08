@@ -15,6 +15,7 @@ import { CreatePayment } from '../api/payment-api';
 import { storeData } from '../utils/storage-utils';
 import { actions } from '../store/actions';
 import { utils } from '../utils';
+import { setBadgeCount } from './zzz';
 
 
 
@@ -31,6 +32,13 @@ const Checkout: React.FC = () => {
   const [note, setNote] = useState('')
   const [address, setAddress] = useState(paymentDetail?.address || '')
   const [isVnPay, setIsVnPay] = useState(true)
+  const [phone, setPhone] = useState('')
+
+  const isTenDigitNumber = (str: string) => {
+    // Check if the string has exactly 10 characters and contains only numbers
+    const regex = /^\d{10}$/;
+    return regex.test(str);
+  }
 
   const items: IOrderItem[] = cart.map((item) => ({
     productId: item.id,
@@ -46,32 +54,40 @@ const Checkout: React.FC = () => {
   }, [paymentDetail]);
 
   const handleCheckOut = async () => {
-    setLoading(true);
-    const data: IPaymentData = {
-      paymentMethod: isVnPay ? 'VNPAY' : 'PAYOS',
-      description: 'Transaction for FAI',
-      details: items,
-      discount: 0
-    };
-    const res = await CreatePayment(data, user!.token);
-    if (res) {
-      setLoading(false);
-      if (res.success) {
-        const paymentDetail: IPaymentStorage = {
-          address: address,
-          note: note,
+    if (!isTenDigitNumber(phone)) {
+      utils.showMessage({
+        message: 'Invalid phone',
+        type: 'danger',
+        icon: 'danger'
+      })
+    } else {
+      setLoading(true);
+      const data: IPaymentData = {
+        paymentMethod: isVnPay ? 'VNPAY' : 'PAYOS',
+        description: 'Transaction for FAI',
+        details: items,
+        discount: 0
+      };
+      const res = await CreatePayment(data, user!.token);
+      if (res) {
+        setLoading(false);
+        if (res.success) {
+          const paymentDetail: IPaymentStorage = {
+            address: address,
+            note: note,
+          }
+          dispatch(actions.setPaymentDetail(paymentDetail))
+          navigation.navigate('PaymentPage', {
+            url: res.data.data,
+            method: isVnPay ? 'VNPAY' : 'PAYOS'
+          })
+        } else {
+          utils.showMessage({
+            message: res.message || 'Something went wrong',
+            type: 'danger',
+            icon: 'danger'
+          })
         }
-        dispatch(actions.setPaymentDetail(paymentDetail))
-        navigation.navigate('PaymentPage', {
-          url: res.data.data,
-          method: isVnPay ? 'VNPAY' : 'PAYOS'
-        })
-      } else {
-        utils.showMessage({
-          message: res.message || 'Something went wrong',
-          type: 'danger',
-          icon: 'danger'
-        })
       }
     }
   };
@@ -238,6 +254,17 @@ const Checkout: React.FC = () => {
     return (
       <View style={{ paddingHorizontal: 20, display: 'flex', flexDirection: 'column', gap: 20 }}>
         {/* <custom.InputFieldBig label='Address' onChange={(value) => setAddress(value)} value={address} placeholder='Enter address' /> */}
+
+        <custom.InputField
+          label='Phone'
+          placeholder='0123456789'
+          containerStyle={{
+            marginBottom: 20,
+          }}
+          value={phone}
+          checkIcon={true}
+          onChangeText={(value) => setPhone(value)}
+        />
         <custom.InputFieldBig label='Note' onChange={(value) => setNote(value)} value={note} placeholder='Enter note' />
       </View>
     );
@@ -255,6 +282,11 @@ const Checkout: React.FC = () => {
       </components.KAScrollView>
     );
   };
+
+  useEffect(() => {
+    // Set an initial badge count when the app loads
+    setBadgeCount(5);
+  }, []);
 
   const renderButton = () => {
     return (

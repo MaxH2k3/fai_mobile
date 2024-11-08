@@ -54,7 +54,6 @@ const CheckoutShippingDetails: React.FC = () => {
       }
     }
     catch (error) {
-      console.log(error)
       utils.showMessage({
         message: 'Something went wrong',
         type: 'danger',

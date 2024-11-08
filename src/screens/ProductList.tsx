@@ -22,34 +22,10 @@ const ProductList: React.FC<Props> = ({ route }) => {
     return <components.Header goBack={true} title={title} />;
   };
 
-  const renderFilterAndSort = () => {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingHorizontal: 20,
-          paddingBottom: 17,
-        }}
-      >
-        <custom.TouchableOpacity
-          onPress={() => {
-            navigation.navigate('Filter');
-          }}
-        >
-          <svg.FiltersSvg />
-        </custom.TouchableOpacity>
-        <custom.TouchableOpacity>
-          <svg.SortingBySvg />
-        </custom.TouchableOpacity>
-      </View>
-    );
-  };
 
   const renderContent = () => {
     if (products?.length === 0) {
-      return <Text>There is no products yet</Text>;
+      return <Text>There is no products</Text>;
     }
 
     if (products?.length > 0) {
@@ -87,7 +63,6 @@ const ProductList: React.FC<Props> = ({ route }) => {
     <custom.SmartView>
       {renderStatusBar()}
       {renderHeader()}
-      {renderFilterAndSort()}
       {renderContent()}
       {renderHomeIndicator()}
     </custom.SmartView>
