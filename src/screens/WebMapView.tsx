@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import { WebView } from 'react-native-webview';
 
-import { NativeModules } from 'react-native';
-import { setBadgeCount } from './zzz';
-
-
 interface Prop {
   latitude1: number
   longitude1: number

@@ -15,8 +15,6 @@ import { CreatePayment } from '../api/payment-api';
 import { storeData } from '../utils/storage-utils';
 import { actions } from '../store/actions';
 import { utils } from '../utils';
-import { setBadgeCount } from './zzz';
-
 
 
 const Checkout: React.FC = () => {
@@ -282,11 +280,6 @@ const Checkout: React.FC = () => {
       </components.KAScrollView>
     );
   };
-
-  useEffect(() => {
-    // Set an initial badge count when the app loads
-    setBadgeCount(5);
-  }, []);
 
   const renderButton = () => {
     return (

@@ -18,13 +18,6 @@ const Home: React.FC = () => {
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
 
-  const { data, isLoading } = useQuery(
-    useProductsQuery({
-      Page: 1,
-      EachPage: 100,
-    })
-  );
-
   const topBanners = [
     'https://res.cloudinary.com/dhdyel6be/image/upload/f_auto,q_auto/v1/FAI/Anothers/yoyhnizabcacaoxwbjwd',
     'https://res.cloudinary.com/dhdyel6be/image/upload/f_auto,q_auto/v1/FAI/Anothers/gzi1ctuijofvb3vnensf',
@@ -37,7 +30,6 @@ const Home: React.FC = () => {
     'https://res.cloudinary.com/dhdyel6be/image/upload/f_auto,q_auto/v1/FAI/Anothers/zv2innlarhcn55nqe8o6'
   ]
 
-  const products: IProductMain[] = data?.data.data || [];
 
   const updateCurrentSlideIndex = (e: any) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
@@ -116,10 +108,7 @@ const Home: React.FC = () => {
                 key={item}
                 activeOpacity={0.5}
                 onPress={() => {
-                  navigation.navigate('ProductList', {
-                    title: 'All product',
-                    products: products,
-                  });
+                  navigation.navigate('AllProductPage');
                 }}
               >
                 <custom.Image

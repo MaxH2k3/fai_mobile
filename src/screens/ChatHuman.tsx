@@ -128,7 +128,7 @@ const ChatHuman: React.FC<Props> = ({ route }) => {
       //       icon: 'danger'
       //     })
       //   }
-      // })   
+      // })
 
       return () => {
         if (connection) {
